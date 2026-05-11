@@ -1,0 +1,342 @@
+---
+/**
+ * SplatViewer — luxury-framed Gaussian-splat viewer.
+ *
+ * Renders only the placeholder DOM. The actual three/spark runtime is loaded
+ * lazily by `src/scripts/splat-viewer.ts` once the section nears the viewport
+ * (or the user taps "Cargar recorrido"). Two heavy chunks (`three`, `spark`)
+ * are split out in astro.config.mjs.
+ *
+ * Props mirror the Property.model object.
+ */
+
+interface Props {
+  src: string;
+  fileName: string;
+  label: string;
+  title: string;
+  caption: string;
+  byteSize: number;
+  autoload?: boolean;
+}
+
+const {
+  src,
+  fileName,
+  label,
+  title,
+  caption,
+  byteSize,
+  autoload = true,
+} = Astro.props;
+
+const sizeMB = (byteSize / (1024 * 1024)).toFixed(1);
+---
+
+<section class="splat" aria-label="Recorrido tridimensional">
+  <div class="container">
+    <header class="splat__header">
+      <p class="label-mono" data-reveal>{label}</p>
+      <h2 class="display splat__title" data-reveal set:html={title.replace('\n', '<br />')} />
+      <p class="splat__caption mono" data-reveal>{caption}</p>
+    </header>
+
+    <div
+      class="splat__frame"
+      data-splat-viewer
+      data-splat-src={src}
+      data-splat-filename={fileName}
+      data-splat-autoload={String(autoload)}
+      data-reveal
+    >
+      <div class="splat__canvas-host" data-splat-canvas aria-hidden="true"></div>
+
+      <div class="splat__hud mono" data-splat-hud hidden>
+        <span>Arrastra para orbitar</span>
+        <span class="splat__hud-sep" aria-hidden="true">·</span>
+        <span class="splat__hud-keys">
+          <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd>
+          <span>para caminar</span>
+        </span>
+        <span class="splat__hud-sep" aria-hidden="true">·</span>
+        <span><kbd>Q</kbd><kbd>E</kbd> sube · baja</span>
+      </div>
+
+      <div class="splat__placeholder" data-splat-placeholder>
+        <span class="splat__placeholder-eyebrow mono">CAPTURA VOLUMÉTRICA</span>
+        <p class="splat__placeholder-status mono" data-splat-status>Listo cuando lo estés</p>
+        <p class="splat__placeholder-sub" data-splat-sub>
+          Activa el recorrido cuando quieras. Pesa {sizeMB} MB.
+        </p>
+
+        <div
+          class="splat__progress"
+          data-splat-progress
+          role="progressbar"
+          aria-valuemin="0"
+          aria-valuemax="100"
+        >
+          <div class="splat__progress-bar" data-splat-progress-bar aria-hidden="true"></div>
+        </div>
+
+        <button
+          class="btn btn--solid splat__load"
+          type="button"
+          data-splat-load
+        >
+          <span>Cargar recorrido · {sizeMB} MB</span>
+        </button>
+      </div>
+
+      <div class="splat__error mono" data-splat-error hidden></div>
+    </div>
+
+    <p class="splat__fine mono">
+      Render por <a
+        href="https://sparkjs.dev/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >Spark</a> · Formato SPZ de Niantic Labs · WebGL2
+    </p>
+  </div>
+</section>
+
+<style>
+  /* ============================================================
+     Splat viewer — luxury frame
+     ============================================================ */
+  .splat {
+    background: var(--color-void);
+    padding: var(--space-section) 0;
+    border-top: var(--border-thin);
+    border-bottom: var(--border-thin);
+  }
+
+  .splat__header {
+    max-width: 800px;
+    margin-bottom: clamp(40px, 5vw, 64px);
+  }
+
+  .splat__title {
+    margin-top: 18px;
+    font-size: var(--text-title);
+    line-height: 1.05;
+    color: var(--color-white);
+    font-weight: var(--weight-light);
+    letter-spacing: -0.01em;
+  }
+
+  .splat__caption {
+    margin-top: 24px;
+    color: var(--color-silver);
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    line-height: 1.7;
+    max-width: 56ch;
+  }
+
+  /* ----- Viewer frame ----- */
+  .splat__frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    background: var(--color-obsidian);
+    border: var(--border-gold);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  /* Hairline accent on the frame */
+  .splat__frame::before,
+  .splat__frame::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 1px solid var(--color-gold);
+    pointer-events: none;
+    z-index: 3;
+  }
+  .splat__frame::before {
+    top: 12px;
+    left: 12px;
+    border-right: 0;
+    border-bottom: 0;
+  }
+  .splat__frame::after {
+    bottom: 12px;
+    right: 12px;
+    border-left: 0;
+    border-top: 0;
+  }
+
+  .splat__canvas-host {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  /* The canvas the renderer injects */
+  .splat__frame :global(canvas.splat__canvas) {
+    display: block;
+    width: 100% !important;
+    height: 100% !important;
+    outline: none;
+    cursor: grab;
+  }
+  .splat__frame :global(canvas.splat__canvas:active) {
+    cursor: grabbing;
+  }
+  .splat__frame :global(canvas.splat__canvas:focus-visible) {
+    outline: 1px solid var(--color-gold);
+    outline-offset: -2px;
+  }
+
+  /* ----- HUD ----- */
+  .splat__hud {
+    position: absolute;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%);
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 18px;
+    background: rgba(8, 8, 8, 0.72);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: var(--border-thin);
+    color: var(--color-silver);
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    z-index: 2;
+    pointer-events: none;
+    max-width: calc(100% - 48px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .splat__hud-sep { color: var(--color-gold-muted); }
+
+  .splat__hud-keys { display: inline-flex; align-items: center; gap: 6px; }
+
+  .splat__hud kbd {
+    display: inline-block;
+    padding: 2px 6px;
+    border: 1px solid var(--color-gold-muted);
+    color: var(--color-gold-light);
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.1em;
+    line-height: 1;
+    background: rgba(184, 150, 90, 0.06);
+  }
+
+  /* ----- Placeholder ----- */
+  .splat__placeholder {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 32px;
+    text-align: center;
+    background:
+      radial-gradient(120% 80% at 50% 50%, rgba(184, 150, 90, 0.05) 0%, rgba(8, 8, 8, 0.6) 60%, var(--color-obsidian) 100%);
+  }
+
+  .splat__placeholder[hidden] { display: none; }
+
+  .splat__placeholder-eyebrow {
+    color: var(--color-gold);
+    font-size: 10px;
+    letter-spacing: 0.45em;
+  }
+
+  .splat__placeholder-status {
+    font-family: var(--font-display);
+    font-size: clamp(20px, 2.2vw, 28px);
+    color: var(--color-white);
+    font-weight: var(--weight-light);
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .splat__placeholder-sub {
+    color: var(--color-silver);
+    font-size: 13px;
+    line-height: 1.6;
+    max-width: 44ch;
+    margin: 0;
+  }
+
+  .splat__progress {
+    width: 240px;
+    max-width: 60%;
+    height: 1px;
+    background: var(--color-smoke);
+    overflow: hidden;
+    margin-top: 4px;
+    position: relative;
+  }
+  .splat__progress-bar {
+    position: absolute;
+    inset: 0;
+    background: var(--color-gold);
+    transform-origin: left center;
+    transform: scaleX(0);
+    transition: transform 200ms ease;
+    will-change: transform;
+  }
+
+  .splat__load {
+    margin-top: 12px;
+    min-width: 280px;
+  }
+
+  /* ----- Error state ----- */
+  .splat__error {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    text-align: center;
+    color: var(--color-silver);
+    background: var(--color-obsidian);
+    font-size: 12px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+  .splat__error[hidden] { display: none; }
+
+  /* ----- Fine print under viewer ----- */
+  .splat__fine {
+    margin-top: 18px;
+    color: var(--color-dim);
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+  }
+  .splat__fine a { color: var(--color-gold-muted); }
+  .splat__fine a:hover { color: var(--color-gold); }
+
+  @media (max-width: 768px) {
+    .splat__frame { aspect-ratio: 4 / 5; }
+    .splat__hud {
+      font-size: 9px;
+      letter-spacing: 0.2em;
+      padding: 8px 12px;
+      gap: 8px;
+    }
+    .splat__hud-keys span:last-child { display: none; }
+  }
+</style>

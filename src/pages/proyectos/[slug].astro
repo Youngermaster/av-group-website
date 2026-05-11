@@ -7,6 +7,7 @@ import MobileMenu from '../../components/MobileMenu.astro';
 import Footer from '../../components/Footer.astro';
 import NoiseOverlay from '../../components/NoiseOverlay.astro';
 import PropertyCard from '../../components/PropertyCard.astro';
+import SplatViewer from '../../components/SplatViewer.astro';
 import ArrowRight from '../../components/icons/ArrowRight.astro';
 import WhatsApp from '../../components/icons/WhatsApp.astro';
 import Diamond from '../../components/icons/Diamond.astro';
@@ -137,6 +138,17 @@ const areaTo = fmt.format(property.areaRange.to);
         </div>
       </div>
     </section>
+
+    {property.model && (
+      <SplatViewer
+        src={property.model.src}
+        fileName={property.model.fileName}
+        label={property.model.label}
+        title={property.model.title}
+        caption={property.model.caption}
+        byteSize={property.model.byteSize}
+      />
+    )}
 
     <!-- Gallery -->
     <section class="ph-gallery" aria-label="Galería">

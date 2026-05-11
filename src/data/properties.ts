@@ -22,6 +22,15 @@ export interface Property {
   coordinates?: string;
   featured?: boolean;
   invitation?: string;
+  // Optional Gaussian-splatting capture rendered by Spark (Niantic SPZ format).
+  model?: {
+    src: string;          // absolute URL/path served by /public (e.g. /models/tour.spz)
+    fileName: string;     // Spark uses the extension to pick the decoder
+    label: string;        // section eyebrow — e.g. "Recorrido 3D"
+    title: string;        // section H2
+    caption: string;      // one-line description above the viewer
+    byteSize: number;     // for the "5.3 MB" hint on the load CTA
+  };
 }
 
 // AV Group hot-links from their Shopify CDN. Replace with own CDN once licensed.
@@ -64,6 +73,15 @@ export const properties: Property[] = [
     coordinates: '6.1956° N · 75.5524° W',
     featured: true,
     invitation: 'Solicitar visita guiada',
+    model: {
+      src: '/models/tour.spz',
+      fileName: 'tour.spz',
+      label: '◆ RECORRIDO 3D',
+      title: 'Camina la residencia\nantes de visitarla.',
+      caption:
+        'Captura volumétrica de una de las unidades muestra. Arrastra para orbitar, usa W·A·S·D para caminar.',
+      byteSize: 3_710_483,
+    },
   },
   {
     id: 'altozza',
@@ -245,6 +263,15 @@ export const properties: Property[] = [
     alt: 'Herbazal — residencial en Loma del Tesoro, El Poblado',
     coordinates: '6.1968° N · 75.5650° W',
     invitation: 'Visitar apartamento muestra',
+    model: {
+      src: '/models/Chair.spz',
+      fileName: 'Chair.spz',
+      label: '◆ DETALLE CURADO',
+      title: 'Cada pieza,\nuna decisión.',
+      caption:
+        'Selección del mobiliario de autor escogido para los espacios sociales. Captura volumétrica inspeccionable.',
+      byteSize: 5_512_008,
+    },
   },
   {
     id: 'cantero',

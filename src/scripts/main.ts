@@ -8,6 +8,7 @@ import { initScrollAnimations } from './scroll-anim';
 import { initZones } from './zones';
 import { initContact } from './contact';
 import { initMotionPermission } from './motion-permission';
+import { initSplatViewers } from './splat-viewer';
 
 function boot() {
   // Eager: nav + loader + cursor + hero entry timeline
@@ -23,6 +24,7 @@ function boot() {
     initScrollAnimations();
     initZones();
     initMotionPermission();
+    initSplatViewers();
   });
 }
 

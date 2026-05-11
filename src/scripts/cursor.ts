@@ -80,17 +80,23 @@ export function initCursor() {
     ring.classList.toggle('cursor-ring--view', on);
     ring.textContent = on ? 'VER' : '';
   };
+  const setHidden = (on: boolean) => {
+    dot.style.opacity = on ? '0' : visible ? '1' : '0';
+    ring.style.opacity = on ? '0' : visible ? '1' : '0';
+  };
 
   document.addEventListener('mouseover', (e) => {
     const t = e.target as HTMLElement;
     if (!t || !t.closest) return;
     if (t.closest('a, button, .interactive')) setHover(true);
     if (t.closest('[data-cursor="view"]')) setView(true);
+    if (t.closest('[data-cursor="hide"]')) setHidden(true);
   });
   document.addEventListener('mouseout', (e) => {
     const t = e.target as HTMLElement;
     if (!t || !t.closest) return;
     if (t.closest('a, button, .interactive')) setHover(false);
     if (t.closest('[data-cursor="view"]')) setView(false);
+    if (t.closest('[data-cursor="hide"]')) setHidden(false);
   });
 }
