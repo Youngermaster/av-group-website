@@ -1,0 +1,102 @@
+---
+import { stats } from '../data/stats';
+---
+
+<section class="stats section" aria-label="Logros Pento Luxury">
+  <!-- Inline noise -->
+  <svg class="stats__noise" aria-hidden="true">
+    <filter id="stats-noise">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="2" stitchTiles="stitch" />
+      <feColorMatrix type="saturate" values="0" />
+    </filter>
+    <rect width="100%" height="100%" filter="url(#stats-noise)" />
+  </svg>
+
+  <div class="container">
+    <div class="stats__grid">
+      {stats.map((s) => (
+        <div class="stats__item" data-reveal>
+          <p class="stats__value display">
+            {s.prefix && <span class="stats__prefix">{s.prefix}</span>}
+            <span data-counter-scroll={s.value}>0</span>
+            {s.suffix && <span class="stats__suffix">{s.suffix}</span>}
+          </p>
+          <p class="stats__label mono">{s.label}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .stats {
+    position: relative;
+    background: var(--color-void);
+    isolation: isolate;
+    border-top: var(--border-thin);
+    border-bottom: var(--border-thin);
+    padding-top: clamp(80px, 10vw, 140px);
+    padding-bottom: clamp(80px, 10vw, 140px);
+  }
+
+  .stats__noise {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.05;
+    pointer-events: none;
+    mix-blend-mode: overlay;
+  }
+
+  .stats__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+
+  .stats__item {
+    padding: 0 clamp(16px, 2vw, 32px);
+    border-left: var(--border-thin);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .stats__item:first-child { border-left: 0; }
+
+  .stats__value {
+    font-size: clamp(40px, 6vw, 80px);
+    color: var(--color-gold);
+    line-height: 1;
+    font-weight: var(--weight-light);
+    letter-spacing: -0.01em;
+  }
+  .stats__prefix, .stats__suffix {
+    color: var(--color-gold);
+    font-family: var(--font-display);
+  }
+
+  .stats__label {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--color-silver);
+    line-height: 1.5;
+    max-width: 18ch;
+  }
+
+  @media (max-width: 768px) {
+    .stats__grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 32px 0;
+    }
+    .stats__item {
+      padding: 16px 16px;
+      border-left: 0;
+      border-top: var(--border-thin);
+    }
+    .stats__item:first-child,
+    .stats__item:nth-child(2) { border-top: 0; }
+  }
+</style>

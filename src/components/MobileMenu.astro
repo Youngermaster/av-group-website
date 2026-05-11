@@ -1,0 +1,146 @@
+---
+import Close from './icons/Close.astro';
+
+const links = [
+  { href: '/#proyectos', label: 'Proyectos' },
+  { href: '/#zonas', label: 'Zonas' },
+  { href: '/#experiencia', label: 'Visión' },
+  { href: '/#contacto', label: 'Contacto' },
+];
+---
+
+<div class="mmenu" data-mobile-menu hidden aria-hidden="true">
+  <div class="mmenu__bar">
+    <span class="mmenu__brand">AV <span aria-hidden="true">◆</span> GROUP</span>
+    <button type="button" class="mmenu__close" data-mobile-close aria-label="Cerrar menú">
+      <Close size={22} />
+    </button>
+  </div>
+  <nav class="mmenu__links" aria-label="Navegación móvil">
+    {links.map((l, i) => (
+      <a
+        href={l.href}
+        class="mmenu__link display"
+        style={`--i:${i}`}
+        data-mobile-link
+      >
+        <span class="mmenu__link-num mono">0{i + 1}</span>
+        <span class="mmenu__link-label">{l.label}</span>
+      </a>
+    ))}
+  </nav>
+  <div class="mmenu__footer">
+    <a href="/#contacto" class="btn btn--solid mmenu__cta" data-mobile-link>
+      Agendar reunión
+    </a>
+    <p class="mmenu__contact mono">+57 301 220 8586 · El Poblado, Medellín</p>
+  </div>
+</div>
+
+<style>
+  .mmenu {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    background: var(--color-void);
+    color: var(--color-white);
+    display: flex;
+    flex-direction: column;
+    padding: clamp(20px, 4vw, 32px) var(--container-pad);
+    padding-top: max(clamp(20px, 4vw, 32px), env(safe-area-inset-top));
+    padding-bottom: max(clamp(20px, 4vw, 32px), env(safe-area-inset-bottom));
+    transform: translateX(100%);
+    opacity: 0;
+    transition: transform 0.6s var(--ease-luxury), opacity 0.4s ease;
+    overflow-y: auto;
+  }
+  .mmenu.is-open {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  .mmenu[hidden] { display: none; }
+
+  .mmenu__bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: clamp(40px, 8vw, 64px);
+  }
+
+  .mmenu__brand {
+    font-family: var(--font-display);
+    font-size: 14px;
+    letter-spacing: 0.3em;
+    color: var(--color-white);
+  }
+  .mmenu__brand span { color: var(--color-gold); margin: 0 6px; }
+
+  .mmenu__close {
+    color: var(--color-silver);
+    width: 40px; height: 40px;
+    display: inline-flex; align-items: center; justify-content: center;
+  }
+
+  .mmenu__links {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(16px, 3vw, 24px);
+    border-top: var(--border-thin);
+    padding-top: clamp(28px, 6vw, 48px);
+  }
+
+  .mmenu__link {
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    color: var(--color-white);
+    font-size: clamp(34px, 9vw, 64px);
+    line-height: 1;
+    font-weight: 300;
+    letter-spacing: -0.01em;
+    transform: translateX(40px);
+    opacity: 0;
+    transition:
+      transform 0.7s var(--ease-luxury),
+      opacity 0.5s ease,
+      color 0.3s var(--ease-luxury);
+    padding: 8px 0;
+    border-bottom: var(--border-thin);
+  }
+  .mmenu__link:hover { color: var(--color-gold); }
+  .mmenu.is-open .mmenu__link {
+    transform: translateX(0);
+    opacity: 1;
+    transition-delay: calc(0.1s + var(--i, 0) * 0.08s);
+  }
+
+  .mmenu__link-num {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--color-gold);
+  }
+
+  .mmenu__footer {
+    padding-top: clamp(24px, 4vw, 40px);
+    border-top: var(--border-thin);
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .mmenu__cta { width: 100%; padding: 16px; }
+
+  .mmenu__contact {
+    color: var(--color-dim);
+    font-size: 10px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  @media (min-width: 1025px) {
+    .mmenu { display: none !important; }
+  }
+</style>

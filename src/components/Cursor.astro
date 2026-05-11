@@ -1,0 +1,69 @@
+---
+// Custom luxury cursor — desktop only, hidden via CSS on touch devices.
+---
+
+<div class="cursor-dot" aria-hidden="true"></div>
+<div class="cursor-ring" aria-hidden="true"></div>
+
+<style>
+  .cursor-dot,
+  .cursor-ring {
+    position: fixed;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    /* will-change removed — the rAF loop now stops itself when settled,
+       so we don't need a permanent compositor layer reservation. */
+  }
+
+  .cursor-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--color-gold);
+    border-radius: 50%;
+  }
+
+  .cursor-ring {
+    width: 38px;
+    height: 38px;
+    border: 1px solid var(--color-gold);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-family: var(--font-mono);
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    color: var(--color-gold);
+    text-transform: uppercase;
+    transition:
+      width 0.4s var(--ease-luxury),
+      height 0.4s var(--ease-luxury),
+      background 0.4s var(--ease-luxury),
+      mix-blend-mode 0.4s var(--ease-luxury),
+      opacity 0.25s ease;
+  }
+
+  .cursor-ring--hover {
+    width: 60px;
+    height: 60px;
+    mix-blend-mode: difference;
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .cursor-ring--view {
+    width: 84px;
+    height: 84px;
+    background: var(--color-gold);
+    color: var(--color-void);
+    mix-blend-mode: normal;
+  }
+
+  /* Hide on touch devices */
+  @media not (hover: hover) {
+    .cursor-dot,
+    .cursor-ring { display: none; }
+  }
+</style>

@@ -1,0 +1,42 @@
+---
+import Layout from '../layouts/Layout.astro';
+import Loader from '../components/Loader.astro';
+import Cursor from '../components/Cursor.astro';
+import Nav from '../components/Nav.astro';
+import MobileMenu from '../components/MobileMenu.astro';
+import Hero from '../components/Hero.astro';
+import Manifesto from '../components/Manifesto.astro';
+import FeaturedProperties from '../components/FeaturedProperties.astro';
+import StatsBar from '../components/StatsBar.astro';
+import Neighborhoods from '../components/Neighborhoods.astro';
+import Experience from '../components/Experience.astro';
+import Testimonial from '../components/Testimonial.astro';
+import ContactSection from '../components/ContactSection.astro';
+import Footer from '../components/Footer.astro';
+import NoiseOverlay from '../components/NoiseOverlay.astro';
+---
+
+<Layout>
+  <Loader />
+  <Cursor />
+  <Nav />
+  <MobileMenu />
+
+  <main id="descubrir">
+    <Hero />
+    <Manifesto />
+    <FeaturedProperties />
+    <StatsBar />
+    <Neighborhoods />
+    <Experience />
+    <Testimonial />
+    <ContactSection />
+  </main>
+
+  <Footer />
+  <NoiseOverlay />
+</Layout>
+
+<script>
+  import('../scripts/main.ts');
+</script>

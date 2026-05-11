@@ -1,0 +1,124 @@
+---
+const pillars = [
+  {
+    num: '01',
+    title: 'Asociación',
+    body:
+      'Cada proyecto nace como un acuerdo entre socios — clientes que entran al costo, sin intermediación. Pertenencia auténtica, no transacción.',
+  },
+  {
+    num: '02',
+    title: 'Curaduría',
+    body:
+      'Diecisiete proyectos en veinte años. Cada uno firmado por un arquitecto distinto: ML Arquitectos, Medianero, Aristizabal, Llano. La diferencia se ve en la fachada.',
+  },
+  {
+    num: '03',
+    title: 'Visión holística',
+    body:
+      'Residencial, vacacional, oficinas, hotel, wellness. Todo el ciclo de vida del usuario en un mismo portafolio — y desde la misma sensibilidad.',
+  },
+];
+---
+
+<section id="experiencia" class="experience section" aria-label="Visión AV Group">
+  <div class="container">
+    <header class="experience__header">
+      <p class="label-mono" data-reveal>◆ EXPERIENCIA AV GROUP</p>
+      <h2 class="display experience__title" data-reveal>
+        Match de los inconformes,<br />aquellos que quieren más.
+      </h2>
+    </header>
+
+    <div class="experience__grid">
+      {pillars.map((p, i) => (
+        <article class="pillar" data-reveal data-reveal-delay={String(i * 0.15)}>
+          <span class="pillar__num mono">{p.num}</span>
+          <h3 class="pillar__title display">{p.title}</h3>
+          <hr class="pillar__line" />
+          <p class="pillar__body">{p.body}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .experience {
+    background: var(--color-void);
+  }
+
+  .experience__header {
+    margin-bottom: clamp(60px, 8vw, 120px);
+    max-width: 900px;
+  }
+
+  .experience__title {
+    margin-top: 24px;
+    font-size: var(--text-title);
+    line-height: 1.1;
+    color: var(--color-white);
+    font-weight: var(--weight-light);
+    letter-spacing: -0.01em;
+  }
+
+  .experience__grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0;
+    border-top: var(--border-thin);
+    padding-top: clamp(40px, 5vw, 64px);
+  }
+
+  .pillar {
+    padding: 0 clamp(20px, 3vw, 48px);
+    border-left: var(--border-thin);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .pillar:first-child { border-left: 0; }
+
+  .pillar__num {
+    color: var(--color-gold-muted);
+    font-size: 11px;
+    letter-spacing: 0.4em;
+  }
+
+  .pillar__title {
+    font-size: clamp(24px, 2.4vw, 32px);
+    color: var(--color-white);
+    font-weight: var(--weight-regular);
+    margin: 0;
+    letter-spacing: 0.04em;
+  }
+
+  .pillar__line {
+    width: 40px;
+    height: 1px;
+    border: 0;
+    background: var(--color-gold);
+    margin: 6px 0;
+  }
+
+  .pillar__body {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--color-silver);
+    font-weight: var(--weight-light);
+    max-width: 36ch;
+  }
+
+  @media (max-width: 768px) {
+    .experience__grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    .pillar {
+      border-left: 0;
+      border-top: var(--border-thin);
+      padding: 32px 0 0 0;
+    }
+    .pillar:first-child { border-top: 0; padding-top: 0; }
+  }
+</style>

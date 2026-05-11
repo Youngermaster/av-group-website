@@ -1,0 +1,174 @@
+---
+import Instagram from './icons/Instagram.astro';
+import LinkedIn from './icons/LinkedIn.astro';
+
+const cols = [
+  {
+    title: 'Proyectos',
+    items: [
+      { label: 'Selvavignon', href: '/proyectos/selvavignon' },
+      { label: 'Altozza', href: '/proyectos/altozza' },
+      { label: 'Wake', href: '/proyectos/wake' },
+      { label: 'Hive Bluum', href: '/proyectos/hive-bluum' },
+    ],
+  },
+  {
+    title: 'Categorías',
+    items: [
+      { label: 'Residencial', href: '/#proyectos' },
+      { label: 'Vacacional', href: '/#proyectos' },
+      { label: 'Oficinas', href: '/#proyectos' },
+      { label: 'Hotel · Wellness', href: '/#proyectos' },
+    ],
+  },
+  {
+    title: 'Visión',
+    items: [
+      { label: 'Equipo', href: '/#experiencia' },
+      { label: 'Manifiesto', href: '/#manifiesto' },
+      { label: 'Contacto', href: '/#contacto' },
+    ],
+  },
+];
+---
+
+<footer class="footer" role="contentinfo">
+  <div class="container footer__inner">
+    <div class="footer__brand">
+      <h2 class="footer__logo display">
+        AV <span aria-hidden="true">◆</span> GROUP
+      </h2>
+      <p class="footer__address mono">
+        Cra. 30 #4 A - 45 Oficina 506A<br />
+        El Poblado · Medellín · Colombia<br />
+        +57 301 220 8586
+      </p>
+    </div>
+
+    <nav class="footer__cols" aria-label="Pie de página">
+      {cols.map((c) => (
+        <div class="footer__col">
+          <h3 class="label-mono footer__col-title">{c.title}</h3>
+          <ul>
+            {c.items.map((it) => (
+              <li><a class="footer__col-link" href={it.href}>{it.label}</a></li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </nav>
+  </div>
+
+  <hr class="footer__divider" />
+
+  <div class="container footer__bottom">
+    <p class="footer__copy mono">© 2026 AV Group. Todos los derechos reservados.</p>
+    <div class="footer__social" aria-label="Redes sociales">
+      <a href="https://www.instagram.com/avgroup.projects/" target="_blank" rel="noopener" aria-label="Instagram @avgroup.projects"><Instagram size={16} /></a>
+      <a href="https://www.tiktok.com/@avgroup.projects" target="_blank" rel="noopener" aria-label="TikTok @avgroup.projects"><LinkedIn size={16} /></a>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer {
+    background: var(--color-obsidian);
+    color: var(--color-silver);
+    padding-top: clamp(80px, 10vw, 140px);
+    padding-bottom: clamp(28px, 3vw, 48px);
+    border-top: var(--border-thin);
+  }
+
+  .footer__inner {
+    display: grid;
+    grid-template-columns: 1.2fr 2fr;
+    gap: clamp(40px, 6vw, 100px);
+    padding-bottom: clamp(56px, 8vw, 100px);
+  }
+
+  .footer__logo {
+    font-size: clamp(28px, 3vw, 44px);
+    font-weight: var(--weight-thin);
+    letter-spacing: 0.18em;
+    color: var(--color-white);
+    margin-bottom: 24px;
+    line-height: 1;
+  }
+  .footer__logo span { color: var(--color-gold); margin: 0 6px; }
+
+  .footer__address {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-dim);
+    line-height: 1.8;
+  }
+
+  .footer__cols {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+  }
+
+  .footer__col-title {
+    margin-bottom: 18px;
+    color: var(--color-gold);
+  }
+
+  .footer__col ul { display: flex; flex-direction: column; gap: 10px; }
+
+  .footer__col-link {
+    color: var(--color-silver);
+    font-size: 13px;
+    transition: color 0.3s var(--ease-luxury);
+  }
+  .footer__col-link:hover { color: var(--color-gold); }
+
+  .footer__divider {
+    border: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-gold-muted), transparent);
+    margin: 0;
+  }
+
+  .footer__bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 28px;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .footer__copy {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--color-dim);
+  }
+
+  .footer__social {
+    display: inline-flex;
+    gap: 14px;
+  }
+  .footer__social a {
+    color: var(--color-silver);
+    width: 34px; height: 34px;
+    display: inline-grid; place-items: center;
+    border: var(--border-thin);
+    border-radius: var(--radius-card);
+    transition: all 0.3s var(--ease-luxury);
+  }
+  .footer__social a:hover { color: var(--color-gold); border-color: var(--color-gold); }
+
+  @media (max-width: 768px) {
+    .footer__inner {
+      grid-template-columns: 1fr;
+      gap: 48px;
+    }
+    .footer__cols {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px 24px;
+    }
+  }
+</style>

@@ -1,0 +1,25 @@
+/* ============================================================
+   PENTO LUXURY — Keyframes only for things GSAP doesn't drive
+   ============================================================ */
+
+@keyframes pento-pulse {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 1; }
+}
+
+@keyframes pento-scroll-line {
+  0%   { transform: scaleY(0); transform-origin: top; }
+  50%  { transform: scaleY(1); transform-origin: top; }
+  51%  { transform: scaleY(1); transform-origin: bottom; }
+  100% { transform: scaleY(0); transform-origin: bottom; }
+}
+
+@keyframes pento-bounce {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(6px); }
+}
+
+@keyframes pento-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}

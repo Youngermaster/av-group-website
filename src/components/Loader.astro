@@ -1,0 +1,67 @@
+---
+// Loader runs as overlay over the page (non-blocking).
+// Hides after ~1.6s without sacrificing LCP.
+---
+
+<div class="loader" data-loader aria-hidden="true">
+  <div class="loader__inner">
+    <span class="loader__pento display">AV</span>
+    <span class="loader__line" aria-hidden="true"></span>
+    <span class="loader__luxury mono">GROUP</span>
+  </div>
+</div>
+
+<style>
+  .loader {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    background: var(--color-void);
+    display: grid;
+    place-items: center;
+    pointer-events: none;
+    transition: opacity 0.7s var(--ease-luxury);
+  }
+  .loader.is-hidden {
+    opacity: 0;
+  }
+  .loader.is-gone {
+    display: none;
+  }
+
+  .loader__inner {
+    display: inline-flex;
+    align-items: center;
+    gap: 18px;
+    color: var(--color-white);
+  }
+
+  .loader__pento {
+    font-size: clamp(28px, 4vw, 48px);
+    letter-spacing: 0.3em;
+    font-weight: var(--weight-light);
+    color: var(--color-white);
+    overflow: hidden;
+    animation: pento-fade-in 0.6s var(--ease-luxury) forwards;
+  }
+
+  .loader__line {
+    display: inline-block;
+    width: 0;
+    height: 1px;
+    background: var(--color-gold);
+    animation: loader-line 0.5s 0.4s var(--ease-luxury) forwards;
+  }
+
+  .loader__luxury {
+    font-size: 11px;
+    letter-spacing: 0.5em;
+    color: var(--color-gold);
+    opacity: 0;
+    animation: pento-fade-in 0.5s 0.85s var(--ease-luxury) forwards;
+  }
+
+  @keyframes loader-line {
+    to { width: 60px; }
+  }
+</style>

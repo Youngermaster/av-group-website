@@ -1,0 +1,39 @@
+/* ============================================================
+   PENTO LUXURY — Self-hosted fonts via @fontsource
+   Cormorant Garamond (display), Jost (body), DM Mono (mono)
+   ============================================================ */
+
+@import '@fontsource/cormorant-garamond/300.css';
+@import '@fontsource/cormorant-garamond/400.css';
+@import '@fontsource/cormorant-garamond/600.css';
+@import '@fontsource/cormorant-garamond/300-italic.css';
+@import '@fontsource/cormorant-garamond/400-italic.css';
+
+@import '@fontsource/jost/200.css';
+@import '@fontsource/jost/300.css';
+@import '@fontsource/jost/400.css';
+@import '@fontsource/jost/500.css';
+
+@import '@fontsource/dm-mono/300.css';
+@import '@fontsource/dm-mono/400.css';
+
+:root {
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'Jost', system-ui, -apple-system, sans-serif;
+  --font-mono:    'DM Mono', ui-monospace, monospace;
+
+  /* Escala tipográfica */
+  --text-hero:    clamp(72px, 10vw, 160px);
+  --text-display: clamp(48px, 6vw, 96px);
+  --text-title:   clamp(32px, 4vw, 56px);
+  --text-heading: clamp(20px, 2.5vw, 32px);
+  --text-body:    clamp(14px, 1.2vw, 16px);
+  --text-small:   12px;
+  --text-micro:   10px;
+
+  --weight-thin:    200;
+  --weight-light:   300;
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-semi:    600;
+}

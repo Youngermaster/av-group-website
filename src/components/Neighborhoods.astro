@@ -1,0 +1,193 @@
+---
+import { zones } from '../data/zones';
+import ArrowRight from './icons/ArrowRight.astro';
+---
+
+<section id="zonas" class="zones section" aria-label="Zonas">
+  <div class="container">
+    <header class="zones__header">
+      <p class="label-mono" data-reveal>◆ ZONAS</p>
+      <h2 class="display zones__title" data-reveal>Geografías del Patrimonio</h2>
+    </header>
+  </div>
+
+  <div class="zones__container" data-zones>
+    {zones.map((z, i) => (
+      <a
+        class="zone"
+        href={`/proyectos/${z.projectSlug}`}
+        data-zone-item
+        style={`background-image:url(${z.image})`}
+        data-cursor="view"
+        aria-label={`Explorar zona ${z.name} — ${z.count} ${z.count === 1 ? 'proyecto' : 'proyectos'}`}
+      >
+        <div class="zone__content">
+          <span class="zone__num mono">0{i + 1}</span>
+          <h3 class="zone__name display">{z.name}</h3>
+          <p class="zone__tag mono">{z.tagline}</p>
+          <p class="zone__count mono">
+            {z.count} {z.count === 1 ? 'proyecto disponible' : 'proyectos disponibles'}
+          </p>
+          <span class="zone__cta mono">Explorar <ArrowRight size={12} /></span>
+        </div>
+        <span class="zone__overlay" aria-hidden="true"></span>
+      </a>
+    ))}
+  </div>
+</section>
+
+<style>
+  .zones {
+    background: var(--color-obsidian);
+    overflow: hidden;
+  }
+
+  .zones__header {
+    margin-bottom: clamp(40px, 5vw, 64px);
+  }
+
+  .zones__title {
+    font-size: var(--text-title);
+    color: var(--color-white);
+    font-weight: var(--weight-light);
+    margin-top: 18px;
+  }
+
+  .zones__container {
+    display: flex;
+    width: 100%;
+    height: 70vh;
+    min-height: 540px;
+  }
+
+  .zone {
+    position: relative;
+    flex: 1 1 20%;
+    background-size: cover;
+    background-position: center;
+    overflow: hidden;
+    border-left: var(--border-thin);
+    transition: flex 0.6s var(--ease-luxury);
+    cursor: pointer;
+    color: var(--color-white);
+    text-decoration: none;
+    display: block;
+  }
+  .zone:first-child { border-left: 0; }
+
+  .zone__overlay {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(8,8,8,0) 0%, rgba(8,8,8,0.85) 80%),
+      linear-gradient(180deg, rgba(8,8,8,0.55), rgba(8,8,8,0.55));
+    transition: background 0.6s var(--ease-luxury);
+    z-index: 0;
+  }
+
+  .zone:hover .zone__overlay {
+    background:
+      linear-gradient(180deg, rgba(8,8,8,0) 0%, rgba(8,8,8,0.9) 75%),
+      linear-gradient(180deg, rgba(8,8,8,0.15), rgba(8,8,8,0.15));
+  }
+
+  .zone__content {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: clamp(24px, 3vw, 40px);
+    color: var(--color-white);
+    gap: 8px;
+  }
+
+  .zone__num {
+    color: var(--color-gold);
+    font-size: 11px;
+    letter-spacing: 0.4em;
+    margin-bottom: clamp(80px, 14vw, 220px);
+  }
+
+  .zone__name {
+    font-size: clamp(24px, 2.4vw, 36px);
+    color: var(--color-white);
+    font-weight: var(--weight-light);
+    line-height: 1;
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    margin-right: auto;
+    transition: writing-mode 0.4s var(--ease-luxury), transform 0.6s var(--ease-luxury);
+  }
+
+  .zone:hover .zone__name {
+    writing-mode: horizontal-tb;
+    transform: rotate(0);
+  }
+
+  .zone__tag,
+  .zone__count,
+  .zone__cta {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.4s ease, transform 0.4s var(--ease-luxury);
+  }
+
+  .zone__tag {
+    font-size: 11px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-silver);
+  }
+
+  .zone__count {
+    font-size: 10px;
+    letter-spacing: 0.3em;
+    color: var(--color-dim);
+  }
+
+  .zone__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--color-gold);
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    margin-top: 12px;
+  }
+
+  .zone:hover .zone__tag,
+  .zone:hover .zone__count,
+  .zone:hover .zone__cta {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  .zone:hover .zone__tag { transition-delay: 0.05s; }
+  .zone:hover .zone__count { transition-delay: 0.1s; }
+  .zone:hover .zone__cta { transition-delay: 0.15s; }
+
+  /* Mobile — accordion vertical */
+  @media (max-width: 1024px) {
+    .zones__container {
+      flex-direction: column;
+      height: auto;
+    }
+    .zone {
+      flex: 1 1 auto;
+      height: 200px;
+      border-left: 0;
+      border-top: var(--border-thin);
+    }
+    .zone:first-child { border-top: 0; }
+    .zone__name {
+      writing-mode: horizontal-tb;
+      transform: rotate(0);
+    }
+    .zone__num { margin-bottom: 12px; }
+    .zone__tag, .zone__count, .zone__cta {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

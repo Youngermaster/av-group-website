@@ -1,0 +1,120 @@
+---
+import { getFeaturedProperties } from '../data/properties';
+import PropertyCard from './PropertyCard.astro';
+import ArrowRight from './icons/ArrowRight.astro';
+
+const featured = getFeaturedProperties();
+const [feature, second, third, fourth] = featured;
+---
+
+<section id="proyectos" class="properties section" aria-label="Proyectos destacados">
+  <div class="container">
+    <header class="properties__header">
+      <p class="label-mono" data-reveal>◆ PROYECTOS</p>
+      <div class="properties__title-row">
+        <h2 class="display properties__title" data-reveal>
+          Curaduría AV Group
+        </h2>
+        <a href="/#contacto" class="properties__more mono" data-reveal>
+          Solicitar portafolio <ArrowRight size={12} />
+        </a>
+      </div>
+    </header>
+
+    <div class="properties__grid">
+      <div class="properties__feature">
+        <PropertyCard property={feature} large />
+      </div>
+      <div class="properties__stack">
+        <PropertyCard property={second} />
+        <PropertyCard property={third} />
+      </div>
+    </div>
+
+    {fourth && (
+      <div class="properties__last">
+        <PropertyCard property={fourth} />
+      </div>
+    )}
+  </div>
+</section>
+
+<style>
+  .properties {
+    background: var(--color-void);
+  }
+
+  .properties__header {
+    margin-bottom: clamp(40px, 6vw, 80px);
+  }
+
+  .properties__header .label-mono {
+    margin-bottom: 18px;
+  }
+
+  .properties__title-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+    border-bottom: var(--border-thin);
+    padding-bottom: clamp(20px, 3vw, 32px);
+  }
+
+  .properties__title {
+    font-size: var(--text-title);
+    font-weight: var(--weight-light);
+    color: var(--color-white);
+    letter-spacing: -0.01em;
+  }
+
+  .properties__more {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--color-silver);
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    transition: color 0.3s var(--ease-luxury);
+  }
+  .properties__more:hover { color: var(--color-gold); }
+
+  .properties__grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: clamp(16px, 2vw, 32px);
+    margin-bottom: clamp(16px, 2vw, 32px);
+  }
+
+  .properties__stack {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    gap: clamp(16px, 2vw, 32px);
+  }
+
+  .properties__last :global(.card) {
+    max-width: 100%;
+  }
+
+  @media (max-width: 1024px) {
+    .properties__grid {
+      grid-template-columns: 1fr;
+    }
+    .properties__stack {
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto;
+      gap: clamp(16px, 3vw, 24px);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .properties__title-row {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .properties__stack {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

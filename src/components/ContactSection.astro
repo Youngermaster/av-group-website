@@ -1,0 +1,279 @@
+---
+import WhatsApp from './icons/WhatsApp.astro';
+import ArrowRight from './icons/ArrowRight.astro';
+
+const whatsappNumber = '573012208586';
+---
+
+<section id="contacto" class="contact section" aria-label="Contacto">
+  <div class="container contact__inner">
+    <header class="contact__header">
+      <p class="label-mono" data-reveal>◆ CONVERSACIÓN PRIVADA</p>
+      <h2 class="display contact__title" data-reveal>
+        Tu próximo proyecto merece<br />una visión holística.
+      </h2>
+    </header>
+
+    <div class="contact__grid">
+      <form class="contact__form" data-contact-form data-reveal>
+        <div class="field">
+          <label for="contact-name" class="mono">Nombre</label>
+          <input
+            id="contact-name"
+            name="name"
+            type="text"
+            required
+            autocomplete="name"
+            placeholder="Tu nombre completo"
+          />
+        </div>
+
+        <div class="field">
+          <label for="contact-phone" class="mono">WhatsApp</label>
+          <input
+            id="contact-phone"
+            name="phone"
+            type="tel"
+            required
+            autocomplete="tel"
+            placeholder="+57 300 000 0000"
+          />
+        </div>
+
+        <div class="field">
+          <label for="contact-zone" class="mono">Zona de interés</label>
+          <select id="contact-zone" name="zone" required>
+            <option value="">Selecciona una categoría</option>
+            <option value="residencial">Residencial</option>
+            <option value="vacacional">Vacacional · rentas cortas</option>
+            <option value="oficinas">Oficinas</option>
+            <option value="hotel">Hotel</option>
+            <option value="wellness">Wellness</option>
+            <option value="otro">Asesoría general</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn--solid contact__submit">
+          <span data-submit-label>Solicitar asesoría privada</span>
+          <span data-submit-dots class="dots" hidden>
+            <span></span><span></span><span></span>
+          </span>
+          <ArrowRight size={14} />
+        </button>
+
+        <p class="contact__success mono" data-success hidden>
+          Recibimos tu mensaje. Un asesor te contactará en privado.
+        </p>
+      </form>
+
+      <aside class="contact__aside" data-reveal>
+        <div class="contact__line">
+          <p class="label-mono">Teléfono</p>
+          <p class="contact__value"><a href="tel:+573012208586">+57 301 220 8586</a></p>
+        </div>
+        <div class="contact__line">
+          <p class="label-mono">Oficina</p>
+          <p class="contact__value">Cra. 30 #4 A - 45 Of. 506A<br />El Poblado · Medellín</p>
+        </div>
+        <hr class="contact__divider" />
+        <p class="contact__or mono">O escríbenos directamente en</p>
+        <a
+          class="contact__whatsapp"
+          href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent('Hola AV Group, me interesa conocer su portafolio.')}`}
+          target="_blank"
+          rel="noopener"
+        >
+          <WhatsApp size={18} />
+          <span>WhatsApp</span>
+          <ArrowRight size={12} />
+        </a>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact {
+    background: var(--color-obsidian);
+  }
+
+  .contact__inner {
+    max-width: 1200px;
+  }
+
+  .contact__header {
+    margin-bottom: clamp(60px, 8vw, 100px);
+    max-width: 900px;
+  }
+
+  .contact__title {
+    margin-top: 24px;
+    font-size: var(--text-title);
+    line-height: 1.1;
+    color: var(--color-white);
+    font-weight: var(--weight-light);
+    letter-spacing: -0.01em;
+  }
+
+  .contact__grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: clamp(40px, 6vw, 96px);
+    align-items: start;
+  }
+
+  /* Form */
+  .contact__form {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .field label {
+    color: var(--color-silver);
+    font-size: 10px;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+  }
+
+  .field input,
+  .field select {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid var(--color-gold-muted);
+    padding: 12px 0;
+    font-family: var(--font-body);
+    font-size: 16px;
+    font-weight: var(--weight-light);
+    color: var(--color-white);
+    transition: border-color 0.3s var(--ease-luxury);
+  }
+
+  .field input::placeholder { color: var(--color-dim); }
+
+  .field input:focus,
+  .field select:focus {
+    outline: none;
+    border-bottom-color: var(--color-gold);
+  }
+
+  .field select {
+    color: var(--color-silver);
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    background-image:
+      linear-gradient(45deg, transparent 50%, var(--color-gold) 50%),
+      linear-gradient(135deg, var(--color-gold) 50%, transparent 50%);
+    background-position:
+      calc(100% - 18px) 1.45em,
+      calc(100% - 12px) 1.45em;
+    background-size: 6px 6px, 6px 6px;
+    background-repeat: no-repeat;
+  }
+
+  .contact__submit {
+    align-self: flex-start;
+    padding: 18px 32px;
+    min-width: 280px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    margin-top: 16px;
+  }
+
+  .contact__success {
+    margin-top: 24px;
+    padding: 16px;
+    border: var(--border-gold);
+    color: var(--color-gold);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .dots { display: inline-flex; gap: 4px; }
+  .dots span {
+    width: 6px; height: 6px;
+    background: var(--color-void);
+    border-radius: 50%;
+    animation: pento-pulse 1.2s infinite;
+  }
+  .dots span:nth-child(2) { animation-delay: 0.2s; }
+  .dots span:nth-child(3) { animation-delay: 0.4s; }
+
+  /* Aside */
+  .contact__aside {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-left: clamp(24px, 4vw, 56px);
+    border-left: var(--border-thin);
+  }
+
+  .contact__line p:first-child { margin-bottom: 6px; }
+
+  .contact__value {
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--color-white);
+    font-weight: var(--weight-light);
+  }
+  .contact__value a { color: inherit; transition: color 0.3s var(--ease-luxury); }
+  .contact__value a:hover { color: var(--color-gold); }
+
+  .contact__divider {
+    border: 0;
+    height: 1px;
+    background: var(--color-gold-muted);
+    width: 60px;
+    margin: 8px 0;
+  }
+
+  .contact__or {
+    font-size: 11px;
+    letter-spacing: 0.3em;
+    color: var(--color-dim);
+    text-transform: uppercase;
+  }
+
+  .contact__whatsapp {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 22px;
+    border: 1px solid var(--color-gold);
+    color: var(--color-white);
+    font-size: 12px;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    align-self: flex-start;
+    transition: all 0.3s var(--ease-luxury);
+    border-radius: var(--radius-card);
+  }
+  .contact__whatsapp:hover {
+    background: var(--color-gold);
+    color: var(--color-void);
+  }
+
+  @media (max-width: 1024px) {
+    .contact__grid {
+      grid-template-columns: 1fr;
+      gap: 56px;
+    }
+    .contact__aside {
+      border-left: 0;
+      border-top: var(--border-thin);
+      padding-left: 0;
+      padding-top: 40px;
+    }
+  }
+</style>
