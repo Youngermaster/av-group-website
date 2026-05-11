@@ -1,0 +1,1508 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>ORÜZ × AV Group — Pitch Deck</title>
+  <meta name="description" content="ORÜZ — plataforma de bienes raíces de ultra-lujo en LATAM, en asociación con AV Group." />
+  <meta name="theme-color" content="#080808" />
+
+  <!-- Editorial display + body + mono. Loaded once, reused per slide. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Jost:wght@200;300;400;500&family=DM+Mono:wght@300;400&display=swap"
+    rel="stylesheet"
+  />
+
+  <style>
+    /* ============================================================
+       ORÜZ × AV Group — Pitch Deck
+       Tokens mirror the main site for visual coherence.
+       ============================================================ */
+    :root {
+      --c-void:        #080808;
+      --c-obsidian:    #0F0F0F;
+      --c-charcoal:    #1A1A1A;
+      --c-smoke:       #2A2A2A;
+
+      --c-gold:        #B8965A;
+      --c-gold-light:  #D4AF7A;
+      --c-gold-muted:  #6B5535;
+      --c-gold-glow:   rgba(184, 150, 90, 0.18);
+
+      --c-white:       #F8F6F2;
+      --c-silver:      #B0AAA0;
+      --c-dim:         #5C5650;
+
+      --c-success:     #7BAE7E;
+      --c-warning:     #C9A05D;
+      --c-danger:      #B86B5E;
+      --c-info:        #8CA3B5;
+
+      --f-display: "Cormorant Garamond", Georgia, serif;
+      --f-body:    "Jost", -apple-system, system-ui, sans-serif;
+      --f-mono:    "DM Mono", ui-monospace, monospace;
+
+      --ease-luxury: cubic-bezier(0.16, 1, 0.3, 1);
+      --ease-reveal: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+      --pad-x: clamp(28px, 6vw, 120px);
+      --pad-y: clamp(40px, 8vh, 96px);
+
+      --border-thin: 1px solid rgba(184, 150, 90, 0.18);
+      --border-gold: 1px solid var(--c-gold-muted);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+
+    html {
+      background: var(--c-void);
+      color: var(--c-white);
+      font-family: var(--f-body);
+      font-weight: 300;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      overflow: hidden;
+      height: 100%;
+    }
+    body {
+      height: 100%;
+      overflow: hidden;
+      cursor: default;
+    }
+
+    h1, h2, h3, h4, h5, p, ul, ol { margin: 0; padding: 0; }
+    ul, ol { list-style: none; }
+    button { font: inherit; color: inherit; background: none; border: none; cursor: pointer; }
+
+    .sr-only {
+      position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+      overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+    }
+
+    /* ============================================================
+       Background — fixed gold radial glow that drifts on slide change.
+       ============================================================ */
+    .bg {
+      position: fixed;
+      inset: -10%;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(60% 50% at var(--bg-x, 30%) var(--bg-y, 35%),
+          var(--c-gold-glow) 0%,
+          rgba(184, 150, 90, 0.04) 30%,
+          transparent 65%),
+        radial-gradient(80% 80% at 50% 50%,
+          rgba(8,8,8,0.0) 0%,
+          rgba(8,8,8,0.6) 70%,
+          var(--c-void) 100%);
+      transition:
+        background-position 1.6s var(--ease-luxury),
+        --bg-x 1.6s var(--ease-luxury),
+        --bg-y 1.6s var(--ease-luxury);
+    }
+
+    /* Subtle film grain over the whole stage. */
+    .bg-grain {
+      position: fixed;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      opacity: 0.05;
+      mix-blend-mode: overlay;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+    }
+
+    /* ============================================================
+       Stage + slides
+       ============================================================ */
+    .stage {
+      position: relative;
+      z-index: 2;
+      height: 100dvh;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      align-content: center;
+      padding: var(--pad-y) var(--pad-x);
+      opacity: 0;
+      pointer-events: none;
+      visibility: hidden;
+      transition: opacity 600ms var(--ease-luxury), visibility 0s linear 600ms;
+    }
+    .slide.is-active {
+      opacity: 1;
+      pointer-events: auto;
+      visibility: visible;
+      transition: opacity 700ms var(--ease-luxury), visibility 0s linear 0s;
+    }
+
+    .slide__inner {
+      max-width: 1280px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* ============================================================
+       Typography primitives
+       ============================================================ */
+    .eyebrow {
+      font-family: var(--f-mono);
+      font-size: clamp(10px, 0.85vw, 12px);
+      font-weight: 400;
+      letter-spacing: 0.45em;
+      text-transform: uppercase;
+      color: var(--c-gold);
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .eyebrow::before {
+      content: '';
+      width: 28px;
+      height: 1px;
+      background: var(--c-gold);
+      display: inline-block;
+    }
+
+    .display {
+      font-family: var(--f-display);
+      font-weight: 300;
+      letter-spacing: -0.01em;
+      line-height: 1.02;
+      color: var(--c-white);
+    }
+    .display em {
+      font-style: italic;
+      font-weight: 300;
+      color: var(--c-gold-light);
+    }
+
+    .h1 { font-size: clamp(48px, 7vw, 120px); }
+    .h2 { font-size: clamp(40px, 5.4vw, 88px); }
+    .h3 { font-size: clamp(28px, 3.4vw, 56px); }
+
+    .body-l {
+      color: var(--c-silver);
+      font-size: clamp(16px, 1.3vw, 19px);
+      line-height: 1.7;
+      font-weight: 300;
+      max-width: 60ch;
+    }
+    .body-m {
+      color: var(--c-silver);
+      font-size: clamp(14px, 1.05vw, 16px);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+    .label-mono {
+      font-family: var(--f-mono);
+      font-size: 11px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--c-dim);
+    }
+
+    .divider-gold {
+      width: 64px;
+      height: 1px;
+      background: var(--c-gold);
+      border: 0;
+      margin: 24px 0;
+    }
+
+    /* Reveal animation tokens. Each [data-anim] gets a base state. */
+    [data-anim] {
+      opacity: 0;
+      transform: translateY(18px);
+      will-change: opacity, transform, clip-path;
+    }
+    [data-anim="clip"] {
+      transform: none;
+      clip-path: inset(0 100% 0 0);
+      opacity: 1;
+    }
+    [data-anim="clip-up"] {
+      transform: none;
+      clip-path: inset(100% 0 0 0);
+      opacity: 1;
+    }
+    [data-anim="scale-fade"] {
+      transform: scale(0.96);
+    }
+
+    /* ============================================================
+       Presenter chrome
+       ============================================================ */
+    .topbar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+      z-index: 50;
+    }
+    .topbar__fill {
+      position: absolute;
+      inset: 0;
+      transform-origin: left center;
+      background: var(--c-gold);
+      transform: scaleX(0);
+      transition: transform 700ms var(--ease-luxury);
+    }
+
+    .chrome {
+      position: fixed;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      gap: 18px;
+      font-family: var(--f-mono);
+      font-size: 10px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--c-silver);
+    }
+    .chrome--tl { top: 28px; left: var(--pad-x); }
+    .chrome--tr { top: 28px; right: var(--pad-x); }
+    .chrome--bl { bottom: 28px; left: var(--pad-x); }
+    .chrome--br { bottom: 28px; right: var(--pad-x); }
+
+    .brand-mark {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--f-display);
+      font-size: 18px;
+      letter-spacing: 0.18em;
+      font-weight: 400;
+      color: var(--c-white);
+      text-transform: none;
+    }
+    .brand-mark .diamond {
+      width: 4px;
+      height: 4px;
+      background: var(--c-gold);
+      transform: rotate(45deg);
+      display: inline-block;
+    }
+    .brand-mark .sm {
+      font-family: var(--f-mono);
+      font-size: 9px;
+      letter-spacing: 0.3em;
+      color: var(--c-silver);
+      text-transform: uppercase;
+    }
+
+    .counter {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .counter__cur { color: var(--c-gold); }
+    .counter__sep { color: var(--c-gold-muted); }
+
+    .controls {
+      display: inline-flex;
+      gap: 6px;
+      pointer-events: auto;
+    }
+    .ctrl-btn {
+      width: 32px;
+      height: 32px;
+      border: var(--border-thin);
+      color: var(--c-silver);
+      display: grid;
+      place-items: center;
+      transition: background 200ms var(--ease-luxury),
+                  border-color 200ms var(--ease-luxury),
+                  color 200ms var(--ease-luxury);
+    }
+    .ctrl-btn:hover {
+      background: rgba(184, 150, 90, 0.08);
+      border-color: var(--c-gold);
+      color: var(--c-gold);
+    }
+    .ctrl-btn svg { width: 12px; height: 12px; fill: currentColor; }
+
+    .hint {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 50;
+      font-family: var(--f-mono);
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--c-dim);
+      opacity: 0.9;
+      transition: opacity 700ms var(--ease-luxury);
+      pointer-events: none;
+      display: inline-flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .hint kbd {
+      display: inline-block;
+      padding: 3px 7px;
+      border: 1px solid var(--c-gold-muted);
+      color: var(--c-gold-light);
+      font-family: var(--f-mono);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      line-height: 1;
+      background: rgba(184, 150, 90, 0.05);
+    }
+    .hint.is-hidden { opacity: 0; }
+
+    /* ============================================================
+       Per-slide layouts
+       ============================================================ */
+    /* — Cover — */
+    .cover {
+      display: grid;
+      align-content: center;
+      gap: clamp(20px, 2vw, 32px);
+    }
+    .cover__brand {
+      font-family: var(--f-display);
+      font-weight: 300;
+      font-size: clamp(96px, 18vw, 280px);
+      line-height: 0.9;
+      letter-spacing: -0.04em;
+      color: var(--c-white);
+      display: inline-flex;
+      align-items: center;
+      gap: clamp(8px, 1vw, 20px);
+    }
+    .cover__brand .u { color: var(--c-gold); }
+    .cover__tag {
+      font-family: var(--f-mono);
+      font-size: clamp(11px, 1vw, 13px);
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--c-silver);
+    }
+    .cover__assoc {
+      margin-top: 24px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      color: var(--c-dim);
+      font-family: var(--f-mono);
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+    }
+    .cover__assoc strong {
+      color: var(--c-white);
+      font-weight: 400;
+      letter-spacing: 0.25em;
+    }
+
+    /* — Grid utilities used across slides — */
+    .grid-12 {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: clamp(16px, 2vw, 32px);
+    }
+    .col-7 { grid-column: span 7; }
+    .col-5 { grid-column: span 5; }
+    .col-6 { grid-column: span 6; }
+    .col-4 { grid-column: span 4; }
+    .col-8 { grid-column: span 8; }
+    @media (max-width: 900px) {
+      .col-7, .col-5, .col-6, .col-4, .col-8 { grid-column: 1 / -1; }
+    }
+
+    /* — Metrics grid — */
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      border-top: var(--border-thin);
+      border-bottom: var(--border-thin);
+      margin-top: clamp(28px, 4vw, 48px);
+    }
+    .metric {
+      padding: clamp(20px, 2.4vw, 36px) clamp(14px, 1.6vw, 24px);
+      border-left: var(--border-thin);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .metric:first-child { border-left: 0; }
+    .metric__label {
+      font-family: var(--f-mono);
+      font-size: 10px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--c-dim);
+    }
+    .metric__value {
+      font-family: var(--f-display);
+      font-size: clamp(36px, 4.6vw, 72px);
+      font-weight: 300;
+      color: var(--c-white);
+      line-height: 1;
+      letter-spacing: -0.01em;
+    }
+    .metric__value .unit { color: var(--c-gold); font-size: 0.6em; margin-left: 4px; }
+    .metric__sub {
+      color: var(--c-silver);
+      font-size: 12px;
+      font-weight: 300;
+    }
+    @media (max-width: 900px) {
+      .metrics { grid-template-columns: 1fr 1fr; }
+      .metric { border-left: 0; border-top: var(--border-thin); }
+      .metric:first-child, .metric:nth-child(2) { border-top: 0; }
+      .metric:nth-child(odd) { border-right: var(--border-thin); }
+    }
+
+    /* — Generic card — */
+    .card {
+      background: var(--c-obsidian);
+      border: var(--border-thin);
+      padding: clamp(20px, 2vw, 32px);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .card__head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-family: var(--f-mono);
+      font-size: 10px;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--c-gold);
+    }
+    .card__head .dot {
+      width: 6px; height: 6px;
+      background: var(--c-gold);
+      transform: rotate(45deg);
+    }
+    .card__title {
+      font-family: var(--f-display);
+      font-weight: 400;
+      font-size: clamp(22px, 2vw, 28px);
+      color: var(--c-white);
+      letter-spacing: -0.005em;
+    }
+
+    /* — Income / bullet list — */
+    .lines { display: flex; flex-direction: column; }
+    .line {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      gap: 16px;
+      padding: 14px 0;
+      border-top: var(--border-thin);
+      color: var(--c-silver);
+      font-size: clamp(14px, 1vw, 16px);
+      line-height: 1.65;
+    }
+    .line:first-child { border-top: 0; }
+    .line__num {
+      font-family: var(--f-mono);
+      font-size: 11px;
+      letter-spacing: 0.2em;
+      color: var(--c-gold);
+      padding-top: 3px;
+    }
+    .line__text strong {
+      color: var(--c-white);
+      font-weight: 400;
+    }
+
+    /* — Two-column compare (Pagos) — */
+    .compare { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px, 2vw, 32px); }
+    @media (max-width: 900px) { .compare { grid-template-columns: 1fr; } }
+    .compare__col { display: flex; flex-direction: column; gap: 14px; }
+    .compare__col h4 {
+      font-family: var(--f-mono);
+      font-size: 11px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      margin: 0 0 6px;
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .compare__col h4 .pill {
+      width: 6px; height: 6px;
+      display: inline-block;
+      transform: rotate(45deg);
+    }
+    .compare__col--ok h4 .pill { background: var(--c-success); }
+    .compare__col--ko h4 .pill { background: var(--c-danger); }
+    .compare__col--ok h4 { color: var(--c-success); }
+    .compare__col--ko h4 { color: var(--c-danger); }
+
+    .callout {
+      margin-top: 12px;
+      padding: 16px 18px;
+      border-left: 2px solid var(--c-gold);
+      background: rgba(184, 150, 90, 0.04);
+      font-size: 13px;
+      color: var(--c-silver);
+      line-height: 1.7;
+    }
+    .callout strong { color: var(--c-white); font-weight: 400; }
+
+    /* — Phase / timeline — */
+    .phases { display: grid; gap: clamp(16px, 1.6vw, 24px); }
+    .phase {
+      display: grid;
+      grid-template-columns: 76px 1fr;
+      gap: 24px;
+      align-items: start;
+      padding: clamp(18px, 1.6vw, 24px) 0;
+      border-top: var(--border-thin);
+    }
+    .phase:first-child { border-top: 0; }
+    .phase__num {
+      font-family: var(--f-display);
+      font-size: clamp(40px, 4.4vw, 64px);
+      font-weight: 300;
+      color: var(--c-gold);
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+    }
+    .phase__title {
+      font-family: var(--f-display);
+      font-weight: 400;
+      font-size: clamp(20px, 1.8vw, 26px);
+      color: var(--c-white);
+      margin-bottom: 6px;
+    }
+    .phase__desc {
+      color: var(--c-silver);
+      font-size: clamp(13px, 1vw, 15px);
+      line-height: 1.7;
+      max-width: 68ch;
+    }
+
+    /* — Big quote / cierre — */
+    .cierre {
+      display: grid;
+      align-content: center;
+      gap: 32px;
+      text-align: center;
+    }
+    .cierre__quote {
+      font-family: var(--f-display);
+      font-style: italic;
+      font-weight: 300;
+      font-size: clamp(40px, 5vw, 88px);
+      line-height: 1.05;
+      color: var(--c-white);
+      max-width: 22ch;
+      margin: 0 auto;
+    }
+    .cierre__quote span { color: var(--c-gold); font-style: normal; }
+    .cierre__sub {
+      font-family: var(--f-mono);
+      font-size: 12px;
+      letter-spacing: 0.4em;
+      text-transform: uppercase;
+      color: var(--c-silver);
+    }
+    .cta {
+      margin-top: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .cta__btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 32px;
+      border: 1px solid var(--c-gold);
+      color: var(--c-white);
+      font-family: var(--f-body);
+      font-size: 12px;
+      font-weight: 400;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      background: var(--c-gold);
+      color: var(--c-void);
+      transition: background 300ms var(--ease-luxury), color 300ms var(--ease-luxury);
+      text-decoration: none;
+    }
+    .cta__btn:hover { background: var(--c-gold-light); }
+    .cta__alt {
+      font-family: var(--f-mono);
+      font-size: 11px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--c-silver);
+      text-decoration: none;
+      transition: color 300ms var(--ease-luxury);
+    }
+    .cta__alt:hover { color: var(--c-gold); }
+
+    /* — Slide title block (used by most slides) — */
+    .title-block { display: grid; gap: 18px; margin-bottom: clamp(36px, 5vw, 64px); }
+    .title-block .h2 { max-width: 18ch; }
+
+    /* — GS feature row — */
+    .gs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(16px, 2vw, 32px); }
+    @media (max-width: 900px) { .gs-grid { grid-template-columns: 1fr; } }
+    .gs-feature {
+      display: grid;
+      grid-template-columns: 56px 1fr;
+      align-items: start;
+      gap: 18px;
+      padding: 18px 0;
+      border-top: var(--border-thin);
+    }
+    .gs-feature:first-child { border-top: 0; }
+    .gs-feature__icon {
+      width: 40px; height: 40px;
+      border: var(--border-gold);
+      display: grid; place-items: center;
+      color: var(--c-gold);
+      font-family: var(--f-mono);
+      font-size: 10px;
+      letter-spacing: 0.2em;
+    }
+    .gs-feature__title {
+      font-family: var(--f-display);
+      font-weight: 400;
+      font-size: 19px;
+      color: var(--c-white);
+      margin-bottom: 4px;
+    }
+    .gs-feature__desc {
+      color: var(--c-silver);
+      font-size: 13px;
+      line-height: 1.65;
+    }
+
+    /* — Pill — */
+    .pill-row { display: inline-flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+    .pill-tag {
+      display: inline-block;
+      padding: 4px 12px;
+      border: var(--border-thin);
+      font-family: var(--f-mono);
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--c-gold);
+    }
+    .pill-tag--ok    { border-color: rgba(123,174,126,0.4); color: var(--c-success); }
+    .pill-tag--warn  { border-color: rgba(201,160,93,0.4); color: var(--c-warning); }
+
+    /* — Section eyebrow grouping — */
+    .head-row {
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 24px;
+      margin-bottom: clamp(36px, 5vw, 64px);
+      flex-wrap: wrap;
+    }
+    .head-row .display { max-width: 18ch; }
+
+    /* — Reduced motion — */
+    @media (prefers-reduced-motion: reduce) {
+      .slide, .topbar__fill, .bg {
+        transition-duration: 1ms !important;
+      }
+      [data-anim] {
+        opacity: 1 !important;
+        transform: none !important;
+        clip-path: none !important;
+      }
+    }
+
+    /* — Mobile fit — */
+    @media (max-width: 720px) {
+      .chrome--tl, .chrome--bl { left: 20px; }
+      .chrome--tr, .chrome--br { right: 20px; }
+      .chrome { font-size: 9px; }
+      .hint { display: none; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Background -->
+  <div class="bg" aria-hidden="true"></div>
+  <div class="bg-grain" aria-hidden="true"></div>
+
+  <!-- Progress bar -->
+  <div class="topbar" aria-hidden="true"><div class="topbar__fill" data-progress></div></div>
+
+  <!-- Top-left brand -->
+  <div class="chrome chrome--tl" aria-hidden="true">
+    <span class="brand-mark">
+      ORÜZ
+      <span class="diamond"></span>
+      <span class="sm">en asociación con AV Group</span>
+    </span>
+  </div>
+
+  <!-- Top-right counter + autoplay/fullscreen -->
+  <div class="chrome chrome--tr">
+    <span class="counter" aria-live="polite">
+      <span class="counter__cur" data-counter-cur>01</span>
+      <span class="counter__sep">/</span>
+      <span class="counter__total" data-counter-total>09</span>
+    </span>
+    <span class="controls" role="group" aria-label="Controles">
+      <button class="ctrl-btn" data-act="prev" aria-label="Anterior">
+        <svg viewBox="0 0 12 12"><path d="M8 2 L4 6 L8 10" stroke="currentColor" stroke-width="1" fill="none"/></svg>
+      </button>
+      <button class="ctrl-btn" data-act="autoplay" aria-label="Reproducción automática" data-state="off">
+        <svg viewBox="0 0 12 12" data-play><path d="M3 2 L10 6 L3 10 Z" fill="currentColor"/></svg>
+        <svg viewBox="0 0 12 12" data-pause style="display:none"><rect x="3" y="2" width="2" height="8" fill="currentColor"/><rect x="7" y="2" width="2" height="8" fill="currentColor"/></svg>
+      </button>
+      <button class="ctrl-btn" data-act="fullscreen" aria-label="Pantalla completa">
+        <svg viewBox="0 0 12 12"><path d="M1 4 V1 H4 M8 1 H11 V4 M1 8 V11 H4 M11 8 V11 H8" stroke="currentColor" stroke-width="1" fill="none"/></svg>
+      </button>
+      <button class="ctrl-btn" data-act="next" aria-label="Siguiente">
+        <svg viewBox="0 0 12 12"><path d="M4 2 L8 6 L4 10" stroke="currentColor" stroke-width="1" fill="none"/></svg>
+      </button>
+    </span>
+  </div>
+
+  <!-- Bottom-left dateline -->
+  <div class="chrome chrome--bl" aria-hidden="true">
+    <span>Medellín · 2026</span>
+  </div>
+
+  <!-- Bottom-right slide title -->
+  <div class="chrome chrome--br" aria-hidden="true">
+    <span data-section-name>Cover</span>
+  </div>
+
+  <!-- Keyboard hint -->
+  <div class="hint" data-hint>
+    <kbd>←</kbd><kbd>→</kbd>
+    <span>navegar</span>
+    <span style="color:var(--c-gold-muted)">·</span>
+    <kbd>A</kbd>
+    <span>autoplay</span>
+    <span style="color:var(--c-gold-muted)">·</span>
+    <kbd>F</kbd>
+    <span>fullscreen</span>
+  </div>
+
+  <!-- ============================================================
+       Stage
+       ============================================================ -->
+  <main class="stage" id="stage" role="region" aria-label="Pitch deck ORÜZ × AV Group">
+
+    <!-- 01 · Cover -->
+    <section class="slide cover" data-slide data-name="Cover" data-bg-x="20%" data-bg-y="40%" aria-label="Portada">
+      <div class="slide__inner cover">
+        <p class="eyebrow" data-anim="fade-up">Pitch Deck · 2026 · Medellín first</p>
+        <h1 class="cover__brand" aria-label="ORÜZ">
+          <span data-anim="fade-up" data-anim-delay="120">O</span>
+          <span data-anim="fade-up" data-anim-delay="200">R</span>
+          <span class="u" data-anim="fade-up" data-anim-delay="280">Ü</span>
+          <span data-anim="fade-up" data-anim-delay="360">Z</span>
+        </h1>
+        <p class="cover__tag" data-anim="fade-up" data-anim-delay="500">
+          La plataforma de bienes raíces de ultra-lujo para LATAM.
+        </p>
+        <hr class="divider-gold" data-anim="clip" data-anim-delay="640" />
+        <p class="cover__assoc" data-anim="fade-up" data-anim-delay="720">
+          <span>En asociación con</span>
+          <strong>AV GROUP</strong>
+        </p>
+      </div>
+    </section>
+
+    <!-- 02 · Mercado -->
+    <section class="slide" data-slide data-name="Mercado" data-bg-x="75%" data-bg-y="30%" aria-label="Mercado">
+      <div class="slide__inner">
+        <div class="title-block">
+          <p class="eyebrow" data-anim="fade-up">◆ Mercado · Oportunidad</p>
+          <h2 class="display h2" data-anim="clip">
+            Un mercado de <em>$12 mil millones</em><br />sin plataforma dominante.
+          </h2>
+          <p class="body-l" data-anim="fade-up" data-anim-delay="220">
+            El lujo inmobiliario en LATAM se cierra entre WhatsApp, planos PDF y broker boutique.
+            Nadie ha curado una plataforma digital a la altura del comprador HNWI.
+          </p>
+        </div>
+
+        <div class="metrics">
+          <div class="metric" data-anim="fade-up" data-anim-delay="80">
+            <span class="metric__label">Ticket promedio</span>
+            <span class="metric__value">$<span data-count="1.8" data-count-decimals="1">1.8</span><span class="unit">B</span></span>
+            <span class="metric__sub">COP por transacción luxury</span>
+          </div>
+          <div class="metric" data-anim="fade-up" data-anim-delay="160">
+            <span class="metric__label">Comisión estimada</span>
+            <span class="metric__value"><span data-count="2">2</span>–<span data-count="3">3</span><span class="unit">%</span></span>
+            <span class="metric__sub">$36–54M COP por deal</span>
+          </div>
+          <div class="metric" data-anim="fade-up" data-anim-delay="240">
+            <span class="metric__label">Mercado LATAM luxury</span>
+            <span class="metric__value">$<span data-count="12">12</span><span class="unit">B</span></span>
+            <span class="metric__sub">USD · sin plataforma dominante</span>
+          </div>
+          <div class="metric" data-anim="fade-up" data-anim-delay="320">
+            <span class="metric__label">Competencia digital directa</span>
+            <span class="metric__value"><span data-count="0">0</span></span>
+            <span class="metric__sub">Plataformas luxury digitales en CO</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 03 · Modelo de negocio -->
+    <section class="slide" data-slide data-name="Modelo de negocio" data-bg-x="30%" data-bg-y="60%">
+      <div class="slide__inner">
+        <div class="head-row">
+          <div>
+            <p class="eyebrow" data-anim="fade-up">◆ Modelo de negocio</p>
+            <h2 class="display h2" data-anim="clip" style="margin-top:18px">
+              Cinco fuentes,<br />una sola intención.
+            </h2>
+          </div>
+          <p class="body-m" data-anim="fade-up" data-anim-delay="160" style="max-width:38ch">
+            Comisión como núcleo. El resto, capas que aumentan ARPU sin diluir la curaduría.
+          </p>
+        </div>
+
+        <div class="grid-12">
+          <div class="col-8">
+            <ul class="lines">
+              <li class="line" data-anim="fade-up" data-anim-delay="80">
+                <span class="line__num">01</span>
+                <span class="line__text"><strong>Comisión por cierre · core.</strong>
+                  2–3% sobre el precio de venta. Un cierre al mes cubre la operación completa.
+                </span>
+              </li>
+              <li class="line" data-anim="fade-up" data-anim-delay="160">
+                <span class="line__num">02</span>
+                <span class="line__text"><strong>Fee de reserva.</strong>
+                  $5–10M COP online para separar propiedad. Descontable del cierre o no reembolsable si el comprador desiste.
+                </span>
+              </li>
+              <li class="line" data-anim="fade-up" data-anim-delay="240">
+                <span class="line__num">03</span>
+                <span class="line__text"><strong>Red de abogados aliados.</strong>
+                  Referido de revisión legal. ORÜZ cobra tarifa de referencia, el abogado cobra honorario. Sin riesgo legal.
+                </span>
+              </li>
+              <li class="line" data-anim="fade-up" data-anim-delay="320">
+                <span class="line__num">04</span>
+                <span class="line__text"><strong>Servicios premium.</strong>
+                  Gaussian Splatting por propiedad ($500K–1M COP), staging virtual, fotografía de lujo.
+                </span>
+              </li>
+              <li class="line" data-anim="fade-up" data-anim-delay="400">
+                <span class="line__num">05</span>
+                <span class="line__text"><strong>Fase 2 · Suscripción constructores.</strong>
+                  Acceso al CRM, leads calificados y analytics de demanda por zona.
+                </span>
+              </li>
+            </ul>
+          </div>
+          <div class="col-4">
+            <div class="card" data-anim="fade-up" data-anim-delay="240">
+              <p class="card__head"><span class="dot"></span> Unit economics</p>
+              <h3 class="card__title">$36–54M COP<br />por transacción.</h3>
+              <p class="body-m">
+                Con un solo cierre/mes la operación corre, con tres se reinvierte en pipeline y producto.
+              </p>
+              <hr class="divider-gold" />
+              <p class="label-mono">Punto de equilibrio</p>
+              <p class="body-m" style="color:var(--c-white)">12 cierres en el año 1.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 · Marco legal -->
+    <section class="slide" data-slide data-name="Marco legal" data-bg-x="65%" data-bg-y="65%">
+      <div class="slide__inner">
+        <div class="title-block">
+          <p class="eyebrow" data-anim="fade-up">◆ Marco legal · Cumplimiento</p>
+          <h2 class="display h2" data-anim="clip">
+            "De la intención al cierre, todo digital.<br />La notaría, <em>un solo día.</em>"
+          </h2>
+        </div>
+
+        <div class="grid-12">
+          <div class="col-6">
+            <div class="card" data-anim="fade-up" data-anim-delay="80" style="border-left: 2px solid var(--c-warning);">
+              <p class="card__head" style="color:var(--c-warning)"><span class="dot" style="background:var(--c-warning)"></span> No se puede eliminar (Colombia)</p>
+              <ul class="lines">
+                <li class="line"><span class="line__num">·</span><span class="line__text">Escritura pública ante notaría — Decreto 960/1970.</span></li>
+                <li class="line"><span class="line__num">·</span><span class="line__text">Registro en Oficina de Instrumentos Públicos. El título no se transfiere sin esto.</span></li>
+                <li class="line"><span class="line__num">·</span><span class="line__text">Paz y salvo de impuesto predial municipal.</span></li>
+              </ul>
+              <p class="callout"><strong>Posicionamiento.</strong> Lo que no se elimina, se orquesta. Todo lo demás —descubrimiento, KYC, reserva, due diligence— pasa por ORÜZ.</p>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="card" data-anim="fade-up" data-anim-delay="160">
+              <p class="card__head"><span class="dot"></span> SARLAFT · El mayor moat</p>
+              <ul class="lines">
+                <li class="line"><span class="line__num">·</span><span class="line__text"><strong>KYC obligatorio.</strong> Biometría, origen de fondos, Clinton/OFAC, PEP, beneficiario real.</span></li>
+                <li class="line"><span class="line__num">·</span><span class="line__text"><strong>Reporte UIAF.</strong> Operaciones en efectivo &gt;$10M COP. ROS sin importar monto.</span></li>
+                <li class="line"><span class="line__num">·</span><span class="line__text"><strong>APIs.</strong> Truora · MetaMap · Jumio integrados desde el día 1.</span></li>
+                <li class="line"><span class="line__num">·</span><span class="line__text"><strong>Ley 1581/2012.</strong> Registro SIC, política de privacidad, protocolo ante vulneraciones.</span></li>
+              </ul>
+              <div class="pill-row" style="margin-top:8px">
+                <span class="pill-tag pill-tag--ok">Moat real</span>
+                <span class="body-m" style="font-size:12px">Quien construya bien el compliance primero, tiene ventaja enorme.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 · Pagos -->
+    <section class="slide" data-slide data-name="Pagos" data-bg-x="50%" data-bg-y="40%">
+      <div class="slide__inner">
+        <div class="title-block">
+          <p class="eyebrow" data-anim="fade-up">◆ Pagos de alta denominación</p>
+          <h2 class="display h2" data-anim="clip">
+            $1.800 millones no <em>"pasan por la pasarela"</em>.
+          </h2>
+          <p class="body-l" data-anim="fade-up" data-anim-delay="200">
+            Las pasarelas estándar topan en $50–200M COP. ORÜZ separa la reserva (online) de la liquidación (banca corporativa).
+          </p>
+        </div>
+
+        <div class="compare">
+          <div class="compare__col compare__col--ok">
+            <h4 data-anim="fade-up" data-anim-delay="80"><span class="pill"></span> Funciona hoy</h4>
+            <ul class="lines">
+              <li class="line" data-anim="fade-up" data-anim-delay="120"><span class="line__num">·</span><span class="line__text"><strong>Transferencia ACH.</strong> Sin límite real. Estándar para ticket alto.</span></li>
+              <li class="line" data-anim="fade-up" data-anim-delay="180"><span class="line__num">·</span><span class="line__text"><strong>Fiducia.</strong> Dinero protegido hasta hitos. Genera confianza luxury.</span></li>
+              <li class="line" data-anim="fade-up" data-anim-delay="240"><span class="line__num">·</span><span class="line__text"><strong>Kushki.</strong> Límites altos, experiencia LATAM.</span></li>
+              <li class="line" data-anim="fade-up" data-anim-delay="300"><span class="line__num">·</span><span class="line__text"><strong>Stripe.</strong> Compradores bancarizados en el exterior.</span></li>
+            </ul>
+          </div>
+          <div class="compare__col compare__col--ko">
+            <h4 data-anim="fade-up" data-anim-delay="120"><span class="pill"></span> No sirven para luxury</h4>
+            <ul class="lines">
+              <li class="line" data-anim="fade-up" data-anim-delay="160"><span class="line__num">·</span><span class="line__text"><strong>Wompi · PayU · ePayco.</strong> Límites de $50–200M COP por transacción.</span></li>
+            </ul>
+            <p class="callout" data-anim="fade-up" data-anim-delay="280">
+              <strong>Estrategia MVP.</strong> Reserva online con Wompi ($5–10M para separar) + transferencia bancaria confirmada manualmente para el resto.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 · AI advisor -->
+    <section class="slide" data-slide data-name="AI advisor" data-bg-x="30%" data-bg-y="40%">
+      <div class="slide__inner">
+        <div class="title-block">
+          <p class="eyebrow" data-anim="fade-up">◆ AI Advisor · Diferenciador clave</p>
+          <h2 class="display h2" data-anim="clip">
+            Cada propiedad,<br />una <em>asesoría privada.</em>
+          </h2>
+          <p class="body-l" data-anim="fade-up" data-anim-delay="200">
+            Tres capas que reducen la fricción entre la curiosidad y la decisión de un comprador HNWI.
+            Costo por análisis con Claude API: centavos de dólar.
+          </p>
+        </div>
+
+        <div class="phases">
+          <div class="phase" data-anim="fade-up" data-anim-delay="80">
+            <span class="phase__num">01</span>
+            <div>
+              <h3 class="phase__title">Resumen ejecutivo automático</h3>
+              <p class="phase__desc">Valora precio vs. mercado, historial de m² en la zona, estado jurídico simplificado, proyección de valorización y riesgos. En lenguaje claro.</p>
+            </div>
+          </div>
+          <div class="phase" data-anim="fade-up" data-anim-delay="200">
+            <span class="phase__num">02</span>
+            <div>
+              <h3 class="phase__title">Simulador financiero</h3>
+              <p class="phase__desc">Cuotas con financiación, leasing vs. crédito hipotecario, yield si arrienda (4–6% anual en El Poblado), beneficio tributario, escenarios.</p>
+            </div>
+          </div>
+          <div class="phase" data-anim="fade-up" data-anim-delay="320">
+            <span class="phase__num">03</span>
+            <div>
+              <h3 class="phase__title">Red de abogados aliados</h3>
+              <p class="phase__desc">Botón <em>"Solicitar revisión legal"</em>. Abogado cobra honorario, ORÜZ cobra referido. Cero riesgo legal, máximo valor percibido.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 07 · Gaussian Splatting -->
+    <section class="slide" data-slide data-name="Gaussian Splatting" data-bg-x="70%" data-bg-y="50%">
+      <div class="slide__inner">
+        <div class="head-row">
+          <div>
+            <p class="eyebrow" data-anim="fade-up">◆ Gaussian Splatting · Ventaja first-mover</p>
+            <h2 class="display h2" data-anim="clip" style="margin-top:18px">
+              Un comprador en Miami<br />camina la finca de <em>Llano Grande.</em>
+            </h2>
+          </div>
+          <div data-anim="fade-up" data-anim-delay="200">
+            <div class="pill-row">
+              <span class="pill-tag">≈ $500K–1M COP / propiedad</span>
+              <span class="pill-tag pill-tag--warn">Ninguna plataforma LATAM lo tiene</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="gs-grid">
+          <div>
+            <div class="gs-feature" data-anim="fade-up" data-anim-delay="80">
+              <span class="gs-feature__icon">01</span>
+              <div>
+                <p class="gs-feature__title">Captura accesible</p>
+                <p class="gs-feature__desc">iPhone + Scaniverse para interiores. Drone DJI para exteriores. Sin equipo costoso, sin operadores especializados.</p>
+              </div>
+            </div>
+            <div class="gs-feature" data-anim="fade-up" data-anim-delay="160">
+              <span class="gs-feature__icon">02</span>
+              <div>
+                <p class="gs-feature__title">Pipeline en AWS</p>
+                <p class="gs-feature__desc">Procesamiento overnight. $5–15 USD por propiedad. Servido como SPZ en CDN — listo para móvil.</p>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="gs-feature" data-anim="fade-up" data-anim-delay="240">
+              <span class="gs-feature__icon">03</span>
+              <div>
+                <p class="gs-feature__title">Viewer sin app</p>
+                <p class="gs-feature__desc">Un link en el navegador. 100+ FPS en móvil. Renderer Spark (Niantic). El comprador habita la propiedad antes de viajar.</p>
+              </div>
+            </div>
+            <div class="gs-feature" data-anim="fade-up" data-anim-delay="320">
+              <span class="gs-feature__icon">04</span>
+              <div>
+                <p class="gs-feature__title">Timing</p>
+                <p class="gs-feature__desc">Tecnología madura, pero no genérica. Quien la integre primero gana asociación de marca con el formato — antes de que se vuelva commodity.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08 · Hoja de ruta -->
+    <section class="slide" data-slide data-name="Hoja de ruta" data-bg-x="50%" data-bg-y="70%">
+      <div class="slide__inner">
+        <div class="title-block">
+          <p class="eyebrow" data-anim="fade-up">◆ Hoja de ruta · LATAM</p>
+          <h2 class="display h2" data-anim="clip">
+            Dominar primero.<br /><em>Escalar después.</em>
+          </h2>
+          <p class="body-l" data-anim="fade-up" data-anim-delay="200">
+            El error que mata proptechs en LATAM es la expansión geográfica antes de validar el modelo.
+            Tres ventanas, una sola dirección.
+          </p>
+        </div>
+
+        <div class="phases">
+          <div class="phase" data-anim="fade-up" data-anim-delay="80">
+            <span class="phase__num">01</span>
+            <div>
+              <h3 class="phase__title">Mes 1–12 · El Poblado + Llano Grande</h3>
+              <p class="phase__desc">20–30 propiedades exclusivas. Pipeline GS, AI advisor, KYC/SARLAFT, comisiones validadas. Equipo mínimo: founders + socios comerciales.</p>
+            </div>
+          </div>
+          <div class="phase" data-anim="fade-up" data-anim-delay="200">
+            <span class="phase__num">02</span>
+            <div>
+              <h3 class="phase__title">Mes 12–24 · Bogotá + Cartagena</h3>
+              <p class="phase__desc">Playbook probado en La Cabrera, Chicó, Bocagrande. Equipo comercial local. Apertura de suscripción para constructores.</p>
+            </div>
+          </div>
+          <div class="phase" data-anim="fade-up" data-anim-delay="320">
+            <span class="phase__num">03</span>
+            <div>
+              <h3 class="phase__title">Mes 24+ · CDMX · Lima · Santiago</h3>
+              <p class="phase__desc">Únicos mercados LATAM con masa crítica HNWI digital. El compliance, ya construido, se convierte en barrera competitiva.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 09 · Cierre -->
+    <section class="slide" data-slide data-name="Cierre" data-bg-x="50%" data-bg-y="50%">
+      <div class="slide__inner cierre">
+        <p class="eyebrow" data-anim="fade-up" style="justify-self:center">◆ Una conversación privada</p>
+        <h2 class="cierre__quote" data-anim="clip">
+          <em>ORÜZ</em><br />no vende propiedades.<br /><span>Curaduría que decide patrimonios.</span>
+        </h2>
+        <p class="cierre__sub" data-anim="fade-up" data-anim-delay="320">
+          ORÜZ × AV Group · Medellín · 2026
+        </p>
+        <div class="cta" data-anim="fade-up" data-anim-delay="440">
+          <a class="cta__btn" href="mailto:hello@oruz.co">
+            Iniciemos la conversación
+            <span aria-hidden="true">→</span>
+          </a>
+          <a class="cta__alt" href="/" target="_blank" rel="noopener">Ver la plataforma →</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      'use strict';
+
+      // ============================================================
+      // Configuration
+      // ============================================================
+      const AUTOPLAY_MS = {
+        default: 9000,
+        Cover: 6500,
+        Cierre: 12000,
+      };
+      const REDUCED_MOTION = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      // ============================================================
+      // DOM
+      // ============================================================
+      const slides = Array.from(document.querySelectorAll('[data-slide]'));
+      const progress = document.querySelector('[data-progress]');
+      const counterCur = document.querySelector('[data-counter-cur]');
+      const counterTotal = document.querySelector('[data-counter-total]');
+      const sectionName = document.querySelector('[data-section-name]');
+      const bg = document.querySelector('.bg');
+      const hint = document.querySelector('[data-hint]');
+      const autoplayBtn = document.querySelector('[data-act="autoplay"]');
+
+      const totalStr = String(slides.length).padStart(2, '0');
+      counterTotal.textContent = totalStr;
+
+      let current = 0;
+      let autoplay = false;
+      let autoplayTimer = 0;
+      let counterAnims = new Set();
+
+      // ============================================================
+      // Animations
+      // ============================================================
+      function animateIn(slide) {
+        const elements = slide.querySelectorAll('[data-anim]');
+        elements.forEach((el) => {
+          const mode = el.dataset.anim;
+          const delay = Number(el.dataset.animDelay || 0);
+          if (REDUCED_MOTION) {
+            el.style.opacity = '1';
+            el.style.transform = 'none';
+            el.style.clipPath = 'none';
+            return;
+          }
+
+          const keyframes = (() => {
+            switch (mode) {
+              case 'clip':
+                return [
+                  { clipPath: 'inset(0 100% 0 0)', opacity: 1 },
+                  { clipPath: 'inset(0 0% 0 0)', opacity: 1 },
+                ];
+              case 'clip-up':
+                return [
+                  { clipPath: 'inset(100% 0 0 0)', opacity: 1 },
+                  { clipPath: 'inset(0% 0 0 0)', opacity: 1 },
+                ];
+              case 'scale-fade':
+                return [
+                  { opacity: 0, transform: 'scale(0.96)' },
+                  { opacity: 1, transform: 'scale(1)' },
+                ];
+              case 'fade-up':
+              default:
+                return [
+                  { opacity: 0, transform: 'translateY(18px)' },
+                  { opacity: 1, transform: 'translateY(0)' },
+                ];
+            }
+          })();
+
+          const anim = el.animate(keyframes, {
+            duration: mode && mode.startsWith('clip') ? 1100 : 800,
+            delay,
+            easing: 'cubic-bezier(0.16, 1, 0.3, 1)',
+            fill: 'forwards',
+          });
+          // Snap final state so the element stays visible after the WAAPI commit.
+          anim.onfinish = () => {
+            el.style.opacity = '1';
+            el.style.transform = 'none';
+            if (mode && mode.startsWith('clip')) el.style.clipPath = 'none';
+          };
+        });
+
+        // Counter animations
+        slide.querySelectorAll('[data-count]').forEach((el) => {
+          if (counterAnims.has(el)) return;
+          counterAnims.add(el);
+          const target = Number(el.dataset.count);
+          const decimals = Number(el.dataset.countDecimals || 0);
+          const duration = 1400;
+          if (REDUCED_MOTION) {
+            el.textContent = target.toFixed(decimals);
+            return;
+          }
+          const start = performance.now();
+          const tick = (now) => {
+            const t = Math.min(1, (now - start) / duration);
+            const eased = 1 - Math.pow(1 - t, 3);
+            const value = target * eased;
+            el.textContent = value.toFixed(decimals);
+            if (t < 1) requestAnimationFrame(tick);
+            else el.textContent = target.toFixed(decimals);
+          };
+          requestAnimationFrame(tick);
+        });
+      }
+
+      function resetSlideAnims(slide) {
+        slide.querySelectorAll('[data-anim]').forEach((el) => {
+          // Cancel any running WAAPI animations so the slide can re-enter cleanly.
+          el.getAnimations().forEach((a) => a.cancel());
+          el.style.opacity = '';
+          el.style.transform = '';
+          el.style.clipPath = '';
+        });
+        slide.querySelectorAll('[data-count]').forEach((el) => {
+          counterAnims.delete(el);
+        });
+      }
+
+      // ============================================================
+      // Slide control
+      // ============================================================
+      function show(index, opts = {}) {
+        const prev = current;
+        current = Math.max(0, Math.min(slides.length - 1, index));
+        const slide = slides[current];
+
+        slides.forEach((s, i) => {
+          if (i === current) {
+            s.classList.add('is-active');
+          } else if (s.classList.contains('is-active')) {
+            s.classList.remove('is-active');
+            // Defer reset until after fade-out completes so visible content
+            // doesn't pop. 700ms matches the .slide transition.
+            setTimeout(() => resetSlideAnims(s), 700);
+          }
+        });
+
+        // Counter + section name
+        counterCur.textContent = String(current + 1).padStart(2, '0');
+        sectionName.textContent = slide.dataset.name || '';
+
+        // Progress bar
+        const pct = slides.length <= 1 ? 1 : current / (slides.length - 1);
+        progress.style.transform = `scaleX(${pct})`;
+
+        // Background drift
+        if (bg && !REDUCED_MOTION) {
+          const x = slide.dataset.bgX || '50%';
+          const y = slide.dataset.bgY || '50%';
+          bg.style.setProperty('--bg-x', x);
+          bg.style.setProperty('--bg-y', y);
+        }
+
+        // Update hash without scrolling
+        const hash = `#/${current + 1}`;
+        if (location.hash !== hash) history.replaceState(null, '', hash);
+
+        // Stagger element animations a beat after the slide fade-in begins.
+        const startDelay = prev === current ? 0 : 220;
+        setTimeout(() => animateIn(slide), startDelay);
+
+        scheduleAutoplay();
+      }
+
+      function next() { show(current + 1 < slides.length ? current + 1 : 0); }
+      function prev() { show(current - 1 >= 0 ? current - 1 : slides.length - 1); }
+
+      // ============================================================
+      // Autoplay
+      // ============================================================
+      function durationFor(slide) {
+        return AUTOPLAY_MS[slide.dataset.name] || AUTOPLAY_MS.default;
+      }
+      function scheduleAutoplay() {
+        clearTimeout(autoplayTimer);
+        if (!autoplay) return;
+        const dur = durationFor(slides[current]);
+        autoplayTimer = setTimeout(() => {
+          if (current + 1 >= slides.length) {
+            // Stop at the end instead of looping; pitch deck etiquette.
+            setAutoplay(false);
+            return;
+          }
+          next();
+        }, dur);
+      }
+      function setAutoplay(on) {
+        autoplay = on;
+        autoplayBtn.dataset.state = on ? 'on' : 'off';
+        autoplayBtn.querySelector('[data-play]').style.display = on ? 'none' : '';
+        autoplayBtn.querySelector('[data-pause]').style.display = on ? '' : 'none';
+        if (on) scheduleAutoplay();
+        else clearTimeout(autoplayTimer);
+      }
+
+      // ============================================================
+      // Input — keyboard, touch, click
+      // ============================================================
+      addEventListener('keydown', (e) => {
+        // Don't hijack form inputs (none here, but future-proof).
+        const tag = (e.target).tagName;
+        if (tag === 'INPUT' || tag === 'TEXTAREA') return;
+
+        switch (e.key) {
+          case 'ArrowRight':
+          case 'PageDown':
+          case ' ':
+          case 'n':
+          case 'N':
+            e.preventDefault();
+            next();
+            break;
+          case 'ArrowLeft':
+          case 'PageUp':
+          case 'p':
+          case 'P':
+            e.preventDefault();
+            prev();
+            break;
+          case 'Home':
+            e.preventDefault();
+            show(0);
+            break;
+          case 'End':
+            e.preventDefault();
+            show(slides.length - 1);
+            break;
+          case 'a':
+          case 'A':
+            setAutoplay(!autoplay);
+            break;
+          case 'f':
+          case 'F':
+            toggleFullscreen();
+            break;
+          case 'Escape':
+            if (document.fullscreenElement) document.exitFullscreen();
+            break;
+          default:
+            if (/^[1-9]$/.test(e.key)) {
+              const i = Number(e.key) - 1;
+              if (i < slides.length) show(i);
+            }
+        }
+      });
+
+      // Touch swipe
+      let touchX = null, touchY = null, touchT = 0;
+      addEventListener('touchstart', (e) => {
+        if (e.touches.length !== 1) return;
+        touchX = e.touches[0].clientX;
+        touchY = e.touches[0].clientY;
+        touchT = performance.now();
+      }, { passive: true });
+      addEventListener('touchend', (e) => {
+        if (touchX === null) return;
+        const t = e.changedTouches[0];
+        const dx = t.clientX - touchX;
+        const dy = t.clientY - touchY;
+        const dt = performance.now() - touchT;
+        touchX = touchY = null;
+        if (dt > 800) return;
+        if (Math.abs(dx) < 60 || Math.abs(dy) > Math.abs(dx)) return;
+        if (dx < 0) next(); else prev();
+      }, { passive: true });
+
+      // Control buttons
+      document.querySelectorAll('[data-act]').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const act = btn.dataset.act;
+          if (act === 'next') next();
+          else if (act === 'prev') prev();
+          else if (act === 'autoplay') setAutoplay(!autoplay);
+          else if (act === 'fullscreen') toggleFullscreen();
+        });
+      });
+
+      function toggleFullscreen() {
+        if (document.fullscreenElement) document.exitFullscreen();
+        else document.documentElement.requestFullscreen?.();
+      }
+
+      // Pause autoplay while the tab is hidden, resume on return.
+      let wasAutoplay = false;
+      document.addEventListener('visibilitychange', () => {
+        if (document.hidden) {
+          wasAutoplay = autoplay;
+          if (autoplay) setAutoplay(false);
+        } else if (wasAutoplay) {
+          setAutoplay(true);
+          wasAutoplay = false;
+        }
+      });
+
+      // Hide the keyboard hint after a few seconds of activity.
+      let hintTimer = setTimeout(() => hint.classList.add('is-hidden'), 5000);
+      const pokeHint = () => {
+        clearTimeout(hintTimer);
+        hint.classList.remove('is-hidden');
+        hintTimer = setTimeout(() => hint.classList.add('is-hidden'), 4000);
+      };
+      addEventListener('keydown', pokeHint, { passive: true });
+      addEventListener('mousemove', () => {
+        if (hint.classList.contains('is-hidden')) return;
+        // do nothing extra, just keep the timer running
+      }, { passive: true });
+
+      // ============================================================
+      // Boot
+      // ============================================================
+      // Honor #/N deep links.
+      const m = /^#\/(\d+)$/.exec(location.hash);
+      const initial = m ? Math.max(0, Math.min(slides.length - 1, Number(m[1]) - 1)) : 0;
+
+      // Make sure no slide is "is-active" before we paint, so the first
+      // slide's intro animation has a clean entry.
+      slides.forEach((s) => s.classList.remove('is-active'));
+      // Lay them all out (already absolute), then activate.
+      requestAnimationFrame(() => requestAnimationFrame(() => show(initial)));
+
+      // Update on back/forward.
+      addEventListener('hashchange', () => {
+        const mm = /^#\/(\d+)$/.exec(location.hash);
+        if (mm) show(Number(mm[1]) - 1);
+      });
+    })();
+  </script>
+</body>
+</html>
