@@ -740,6 +740,222 @@
       .chrome { font-size: 9px; }
       .hint { display: none; }
     }
+
+    /* ============================================================
+       Print / PDF export
+       Each slide becomes a 16:9 page (297×167mm). All animations are
+       forced to their final state so non-active slides render fully.
+       The same rules also apply via html.is-print so the static export
+       mode (?print=1) can render identically on screen for verification.
+       ============================================================ */
+    @media print {
+      @page {
+        size: 297mm 167mm;
+        margin: 0;
+      }
+
+      /* Hard-stop every transition/animation in the print pipeline so the
+         snapshot can't catch anything mid-flight. */
+      *, *::before, *::after {
+        animation: none !important;
+        animation-duration: 0s !important;
+        animation-delay: 0s !important;
+        transition: none !important;
+        transition-duration: 0s !important;
+        transition-delay: 0s !important;
+      }
+    }
+
+    @media print {
+      html, body {
+        overflow: visible !important;
+        height: auto !important;
+        background: var(--c-void) !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+        color-adjust: exact;
+      }
+
+      /* Hide presenter chrome */
+      .bg, .bg-grain,
+      .topbar, .chrome, .hint { display: none !important; }
+
+      .stage {
+        height: auto !important;
+        overflow: visible !important;
+        display: block !important;
+      }
+
+      /* Each slide becomes its own page, stacked in document order.
+         We deliberately drop the grid + align-content: center layout used on
+         screen — when slide content exceeds the page height, grid centering
+         clips both top and bottom (the only visible part is a middle band,
+         which on slides like Mercado/Modelo turned the page nearly blank).
+         Flex column + justify-content: center gives the same vertical
+         centering but lets overflow fall off the bottom instead of both
+         edges, so all content remains visible up to the page height. */
+      .slide {
+        position: static !important;
+        inset: auto !important;
+        width: 297mm !important;
+        height: 167mm !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+        pointer-events: auto !important;
+        transition: none !important;
+        transform: none !important;
+        background: var(--c-void) !important;
+        overflow: hidden !important;
+        page-break-after: always;
+        break-after: page;
+        page-break-inside: avoid;
+        break-inside: avoid;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        padding: var(--pad-y) var(--pad-x) !important;
+        margin: 0 !important;
+        background-image:
+          radial-gradient(60% 50% at 30% 40%,
+            rgba(184, 150, 90, 0.10) 0%,
+            rgba(184, 150, 90, 0.02) 30%,
+            transparent 65%) !important;
+      }
+      .slide:last-of-type { page-break-after: auto; break-after: auto; }
+
+      .slide__inner {
+        flex-shrink: 0 !important;
+      }
+
+      /* All entrance animations: final state. will-change removed so no
+         stale compositor layers cause subpixel blur on the printed page. */
+      [data-anim] {
+        opacity: 1 !important;
+        transform: none !important;
+        clip-path: none !important;
+        visibility: visible !important;
+        will-change: auto !important;
+        filter: none !important;
+      }
+
+      /* Subtle ORÜZ × AV Group footer on every printed page. */
+      .slide::after {
+        content: 'ORÜZ  ◆  en asociación con AV Group';
+        position: absolute;
+        right: var(--pad-x);
+        bottom: 18mm;
+        font-family: var(--f-mono);
+        font-size: 9px;
+        letter-spacing: 0.35em;
+        text-transform: uppercase;
+        color: var(--c-dim);
+        opacity: 0.7;
+      }
+      .slide.cover::after,
+      .slide[data-name="Cierre"]::after { content: none; }
+
+      /* ---- Force multi-column layouts to stay multi-column ----
+         Chrome's print viewport often resolves min/max-width media queries
+         differently than the page width suggests, so layouts that were
+         designed as 2-column at desktop width can collapse to 1-column in
+         print and overflow the page. Pin them explicitly. */
+      .grid-12 { grid-template-columns: repeat(12, 1fr) !important; }
+      .col-7 { grid-column: span 7 !important; }
+      .col-5 { grid-column: span 5 !important; }
+      .col-6 { grid-column: span 6 !important; }
+      .col-4 { grid-column: span 4 !important; }
+      .col-8 { grid-column: span 8 !important; }
+      .compare { grid-template-columns: 1fr 1fr !important; }
+      .gs-grid { grid-template-columns: 1fr 1fr !important; }
+      .metrics { grid-template-columns: repeat(4, 1fr) !important; }
+
+      /* ---- Print typography scale ----
+         At 297mm page width, vw-based clamps shrink and titles wrap to more
+         lines than on a 1440px desktop. We tighten the type so every slide
+         fits inside 167mm vertical without clipping. */
+      .h1 { font-size: 88px !important; line-height: 1.0 !important; }
+      .h2 { font-size: 44px !important; line-height: 1.08 !important; }
+      .h3 { font-size: 28px !important; line-height: 1.15 !important; }
+
+      .body-l {
+        font-size: 14px !important;
+        line-height: 1.55 !important;
+        max-width: 66ch !important;
+      }
+      .body-m { font-size: 12.5px !important; line-height: 1.55 !important; }
+
+      .eyebrow { font-size: 10px !important; }
+      .label-mono { font-size: 10px !important; }
+
+      .display { letter-spacing: -0.012em !important; }
+
+      .title-block,
+      .head-row {
+        margin-bottom: 18px !important;
+        gap: 10px !important;
+      }
+      .title-block .h2 { max-width: 22ch !important; }
+
+      .metrics { margin-top: 16px !important; }
+      .metric { padding: 16px 18px !important; gap: 6px !important; }
+      .metric__value { font-size: 40px !important; }
+      .metric__label { font-size: 9px !important; }
+      .metric__sub { font-size: 11px !important; }
+
+      .card { padding: 18px 22px !important; gap: 10px !important; }
+      .card__title { font-size: 20px !important; }
+
+      .line { padding: 8px 0 !important; font-size: 12.5px !important; line-height: 1.45 !important; }
+      .line__num { font-size: 10px !important; padding-top: 1px !important; }
+
+      .compare { gap: 20px !important; }
+      .compare__col h4 { font-size: 10px !important; }
+      .callout { font-size: 12px !important; padding: 12px 14px !important; }
+
+      .phases { gap: 12px !important; }
+      .phase { padding: 12px 0 !important; gap: 18px !important; grid-template-columns: 60px 1fr !important; }
+      .phase__num { font-size: 40px !important; }
+      .phase__title { font-size: 18px !important; }
+      .phase__desc { font-size: 12px !important; line-height: 1.55 !important; }
+
+      .gs-feature { padding: 10px 0 !important; }
+      .gs-feature__title { font-size: 16px !important; }
+      .gs-feature__desc { font-size: 12px !important; line-height: 1.5 !important; }
+      .gs-feature__icon { width: 36px !important; height: 36px !important; }
+
+      .cierre__quote { font-size: 64px !important; line-height: 1.05 !important; }
+      .cierre__sub { font-size: 11px !important; }
+
+      .cover__brand { font-size: 200px !important; line-height: 0.9 !important; }
+      .cover__tag { font-size: 12px !important; }
+
+      .pill-tag { font-size: 9px !important; padding: 3px 10px !important; }
+
+      :root {
+        --pad-y: 36px;
+        --pad-x: 80px;
+      }
+    }
+
+    /* ============================================================
+       Static print mode mirror — applied on screen when ?print=1
+       so the export pipeline can render slides in their final state
+       even before @media print kicks in.
+       ============================================================ */
+    html.is-print [data-anim] {
+      opacity: 1 !important;
+      transform: none !important;
+      clip-path: none !important;
+      will-change: auto !important;
+      filter: none !important;
+    }
+    html.is-print .slide {
+      transition: none !important;
+    }
+    html.is-print *, html.is-print *::before, html.is-print *::after {
+      animation-duration: 0s !important;
+      transition-duration: 0s !important;
+    }
   </style>
 </head>
 <body>
@@ -1184,6 +1400,52 @@
       const REDUCED_MOTION = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
       // ============================================================
+      // Print / export static mode
+      // Activated via ?print=1 on the URL (used by slides/export-pdf.sh)
+      // or by the beforeprint event (Cmd+P, E shortcut).
+      // Cancels every WAAPI animation, snaps all elements + counters to
+      // their final state, and marks every slide active so @media print
+      // can paginate them without any mid-animation blur.
+      // ============================================================
+      function freezeToFinalState() {
+        // Cancel any running WAAPI animations and clear inline anim state.
+        document.querySelectorAll('[data-anim]').forEach((el) => {
+          try {
+            el.getAnimations().forEach((a) => { try { a.finish(); } catch {} a.cancel(); });
+          } catch {}
+          el.style.opacity = '1';
+          el.style.transform = 'none';
+          el.style.clipPath = 'none';
+          el.style.willChange = 'auto';
+        });
+        // Snap every counter to its target value.
+        document.querySelectorAll('[data-count]').forEach((el) => {
+          const target = Number(el.dataset.count);
+          const decimals = Number(el.dataset.countDecimals || 0);
+          if (!Number.isNaN(target)) el.textContent = target.toFixed(decimals);
+        });
+        // Activate every slide simultaneously. On screen this stacks them
+        // visually; @media print rewrites them to page-sized blocks.
+        document.querySelectorAll('[data-slide]').forEach((s) => s.classList.add('is-active'));
+      }
+
+      const PARAMS = new URLSearchParams(location.search);
+      const PRINT_MODE = PARAMS.get('print') === '1';
+
+      if (PRINT_MODE) {
+        // Static export pass. Snap every element to its final state and
+        // mark every slide active so @media print can paginate cleanly.
+        document.documentElement.classList.add('is-print');
+        // Run immediately and again after fonts settle — Chrome's print
+        // snapshot happens after virtual-time advance, so we need the DOM
+        // to already be in its final state by then.
+        freezeToFinalState();
+        document.fonts?.ready.then(freezeToFinalState);
+        requestAnimationFrame(() => requestAnimationFrame(freezeToFinalState));
+        return; // exit the IIFE — skip all slide-cycling / autoplay logic
+      }
+
+      // ============================================================
       // DOM
       // ============================================================
       const slides = Array.from(document.querySelectorAll('[data-slide]'));
@@ -1415,6 +1677,13 @@
           case 'Escape':
             if (document.fullscreenElement) document.exitFullscreen();
             break;
+          case 'e':
+          case 'E':
+            // Cmd+P equivalent — open the browser print dialog. The @media
+            // print stylesheet expands all slides into a paginated PDF.
+            e.preventDefault();
+            window.print();
+            break;
           default:
             if (/^[1-9]$/.test(e.key)) {
               const i = Number(e.key) - 1;
@@ -1501,6 +1770,19 @@
       addEventListener('hashchange', () => {
         const mm = /^#\/(\d+)$/.exec(location.hash);
         if (mm) show(Number(mm[1]) - 1);
+      });
+
+      // Cmd+P / `E` shortcut → freeze every slide before the browser snapshots.
+      addEventListener('beforeprint', () => {
+        document.documentElement.classList.add('is-print');
+        // Stop autoplay so it doesn't keep firing while the print dialog is open.
+        if (autoplay) setAutoplay(false);
+        freezeToFinalState();
+      });
+      addEventListener('afterprint', () => {
+        // Restore the animated experience after print closes.
+        document.documentElement.classList.remove('is-print');
+        location.reload();
       });
     })();
   </script>
